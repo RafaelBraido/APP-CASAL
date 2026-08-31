@@ -2,7 +2,7 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../Models/User.js";
-import Tutorial from "../Models/Tutorial.js";
+import Tutorial from "../Models/Devocional.js";
 
 const NOME_ADMIN_CODIGO = "Administrador";
 

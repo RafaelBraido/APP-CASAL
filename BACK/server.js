@@ -37,8 +37,8 @@ app.use("/Tutorial", TutorialRoutes);
 app.use("/Admin", AdminRoutes);
 
 // Qualquer outra rota carrega o index.html do Front
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Front/index.html"));
+app.get("*all", (req, res) => {
+  res.sendFile(path.join(__dirname, "../FRONT/index.html"));
 });
 
 // Middleware global de tratamento de erros
