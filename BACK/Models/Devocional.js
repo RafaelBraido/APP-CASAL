@@ -2,15 +2,24 @@ import mongoose from "mongoose";
 
 const DevocionalSchema = new mongoose.Schema(
   {
-    title: {
+    titulo: {
       type: String,
       required: true,
       trim: true,
     },
-    description: { 
+    conteudo: {
       type: String,
       required: true,
+    },
+    versiculo: {
+      type: String,
       trim: true,
+      default: "",
+    },
+    autor: {
+      type: String,
+      trim: true,
+      default: "Pastores Rodrigo & Suelen Labiato",
     },
   },
   {

@@ -1,18 +1,47 @@
-import Tutorial from "../Models/Devocional.js";
+import Devocional from "../Models/Devocional.js";
 
 const createDevocional = async (data) => {
-  const { Title, Description } = data;
+  const { titulo, conteudo, versiculo } = data;
 
-  if (!Title || !Description) {
-    const error = new Error("Título e descrição são obrigatórios");
+  if (!titulo || !conteudo) {
+    const error = new Error("Título e conteúdo são obrigatórios");
     error.statusCode = 400;
     throw error;
   }
 
   return Devocional.create({
-    Title: Title,
-    Description: Description,
+    titulo,
+    conteudo,
+    versiculo: versiculo || "",
   });
+};
+
+const listDevocionais = async () => {
+  return Devocional.find().sort({ createdAt: -1 });
+};
+
+const updateDevocional = async (devocionalId, data) => {
+  const { titulo, conteudo, versiculo } = data;
+
+  if (!titulo || !conteudo) {
+    const error = new Error("Título e conteúdo são obrigatórios");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const devocional = await Devocional.findByIdAndUpdate(
+    devocionalId,
+    { titulo, conteudo, versiculo: versiculo || "" },
+    { new: true, runValidators: true }
+  );
+
+  if (!devocional) {
+    const error = new Error("Devocional não encontrado");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return devocional;
 };
 
 const deleteDevocional = async (devocionalId) => {
@@ -33,38 +62,9 @@ const deleteDevocional = async (devocionalId) => {
   return devocional;
 };
 
-const updateDevocional = async (devocionalId, data) => {
-  const { Title, Description } = data;
-
-  if (!Title || !Description) {
-    const error = new Error("Título e descrição são obrigatórios");
-    error.statusCode = 400;
-    throw error;
-  }
-
-  const devocional = await Devocional.findByIdAndUpdate(
-    devocionalId,
-    { Title, Description },
-    { new: true, runValidators: true }
-  );
-
-  if (!devocional) {
-    const error = new Error("Devocional não encontrado");
-    error.statusCode = 404;
-    throw error;
-  }
-
-  return devocional  ;
-};
-
-const getAllDevocionais = async () => {
-  const devocionais = await Devocional.find();
-  return devocionais;
-};
-
 export default {
   createDevocional,
-  deleteDevocional,
+  listDevocionais,
   updateDevocional,
-  getAllDevocionais,
+  deleteDevocional,
 };
