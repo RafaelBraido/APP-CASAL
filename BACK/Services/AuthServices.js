@@ -31,6 +31,7 @@ function gerarEmailInterno(nome) {
 const register = async (data) => {
   const nome = String(data.nome || "").trim();
   const password = String(data.password || "");
+  const telefone = String(data.telefone || "").trim();
   const { role } = data;
 
   if (!nome || !password) {
@@ -60,6 +61,7 @@ const register = async (data) => {
 
   const user = await User.create({
     nome,
+    telefone,
     email: gerarEmailInterno(nome),
     password: hashedPassword,
     role: role || "user",

@@ -10,6 +10,7 @@ import UserRoutes from "./Routes/UserRoutes.js";
 import AuthRoutes from "./Routes/AuthRoutes.js";
 import DevocionalRoutes from "./Routes/DevocionalRoutes.js";
 import PregacaoRoutes from "./Routes/PregacaoRoutes.js";
+import ResultadoRoutes from "./Routes/ResultadoRoutes.js";
 import AdminRoutes from "./Routes/AdminRoutes.js";
 
 dotenv.config();
@@ -37,6 +38,7 @@ app.use("/User", UserRoutes);
 app.use("/auth", AuthRoutes);
 app.use("/devocional", DevocionalRoutes);
 app.use("/pregacao", PregacaoRoutes);
+app.use("/resultado", ResultadoRoutes);
 app.use("/Admin", AdminRoutes);
 
 // Qualquer outra rota carrega o index.html da pasta FRONT

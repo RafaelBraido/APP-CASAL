@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
@@ -22,9 +23,16 @@
         <a href="#inicio" data-nav>Início</a>
         <a href="#devocionais" data-nav>Devocionais</a>
         <a href="#pregacoes" data-nav>Pregações</a>
-        <a href="#teste" data-nav>Teste do Casal</a>
+        <a href="#testes" data-nav>Testes</a>
       </nav>
-      <button class="btn btn--ghost btn--sm" id="btnAdmin">Admin</button>
+      <div class="nav__right">
+        <div class="nav__user" id="navUser" hidden>
+          <span id="navUserName"></span>
+          <button class="btn btn--ghost btn--sm" id="btnSair">Sair</button>
+        </div>
+        <button class="btn btn--gold btn--sm" id="btnEntrar">Entrar</button>
+        <button class="btn btn--ghost btn--sm" id="btnAdmin">Admin</button>
+      </div>
       <button class="nav__toggle" id="navToggle" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
@@ -37,10 +45,10 @@
     <div class="hero__content">
       <p class="hero__kicker">Pastores &middot; Rodrigo Labiato da Silva &amp; Suelen Braido Labiato</p>
       <h1 class="hero__title">Um coração <em>só</em> para servir</h1>
-      <p class="hero__sub">Devocionais, pregações e momentos para fortalecer a vida a dois — guiados pela fé que nos une.</p>
+      <p class="hero__sub">Devocionais, pregações e testes para fortalecer a vida a dois — guiados pela fé que nos une.</p>
       <div class="hero__actions">
         <a href="#devocionais" class="btn btn--gold" data-nav>Ler devocionais</a>
-        <a href="#teste" class="btn btn--outline" data-nav>Fazer o teste do casal</a>
+        <a href="#testes" class="btn btn--outline" data-nav>Fazer um teste</a>
       </div>
     </div>
     <div class="hero__scroll" aria-hidden="true">↓</div>
@@ -54,8 +62,15 @@
         <h2 class="section__title">Devocionais</h2>
         <p class="section__desc">Mensagens para nutrir a vida do casal, dia após dia.</p>
       </div>
-      <div class="cards" id="listaDevocionais">
-        <p class="cards__empty">Carregando devocionais…</p>
+      <div id="devocionaisWrap">
+        <div class="locked" id="devocionaisLocked" hidden>
+          <div class="locked__card">
+            <h3>Os devocionais são para quem faz parte</h3>
+            <p>Entre na sua conta ou cadastre-se para ler os devocionais dos pastores.</p>
+            <button class="btn btn--gold" data-open-entrar>Entrar / Cadastrar</button>
+          </div>
+        </div>
+        <div class="cards" id="listaDevocionais" hidden></div>
       </div>
     </div>
   </section>
@@ -68,37 +83,36 @@
         <h2 class="section__title">Pregações</h2>
         <p class="section__desc">Assista às pregações dos pastores Rodrigo &amp; Suelen direto do YouTube.</p>
       </div>
-      <div class="cards" id="listaPregacoes">
-        <p class="cards__empty">Carregando pregações…</p>
+      <div id="pregacoesWrap">
+        <div class="locked" id="pregacoesLocked" hidden>
+          <div class="locked__card">
+            <h3>As pregações esperam por você</h3>
+            <p>Entre na sua conta ou cadastre-se para assistir às pregações.</p>
+            <button class="btn btn--gold" data-open-entrar>Entrar / Cadastrar</button>
+          </div>
+        </div>
+        <div class="cards" id="listaPregacoes" hidden></div>
       </div>
     </div>
   </section>
 
-  <!-- TESTE DO CASAL -->
-  <section class="section" id="teste">
+  <!-- TESTES -->
+  <section class="section" id="testes">
     <div class="container">
       <div class="section__head">
         <p class="section__eyebrow">Conhecer-se para amar melhor</p>
-        <h2 class="section__title">Teste de Personalidade do Casal</h2>
-        <p class="section__desc">Responda com o coração e descubram o perfil que descreve a relação de vocês.</p>
+        <h2 class="section__title">Testes para o casal</h2>
+        <p class="section__desc">Testes interativos para vocês se entenderem e crescerem juntos.</p>
       </div>
-
-      <div class="quiz" id="quiz">
-        <div class="quiz__intro" id="quizIntro">
-          <p>Um pequeno teste para o casal refletir juntos. Sem respostas certas ou erradas — apenas a verdade de quem vocês são.</p>
-          <button class="btn btn--gold" id="quizStart">Começar o teste</button>
-        </div>
-
-        <div class="quiz__box" id="quizBox" hidden>
-          <div class="quiz__progress">
-            <span id="quizStep">1</span> / <span id="quizTotal">6</span>
-            <div class="quiz__bar"><div class="quiz__bar-fill" id="quizBar"></div></div>
+      <div id="testesWrap">
+        <div class="locked" id="testesLocked" hidden>
+          <div class="locked__card">
+            <h3>Os testes são para quem faz parte</h3>
+            <p>Entre na sua conta ou cadastre-se para fazer os testes do casal.</p>
+            <button class="btn btn--gold" data-open-entrar>Entrar / Cadastrar</button>
           </div>
-          <h3 class="quiz__question" id="quizQuestion"></h3>
-          <div class="quiz__options" id="quizOptions"></div>
         </div>
-
-        <div class="quiz__result" id="quizResult" hidden></div>
+        <div id="testesArea" hidden></div>
       </div>
     </div>
   </section>
@@ -117,10 +131,58 @@
     </div>
   </footer>
 
+  <!-- USER MODAL -->
+  <div class="modal" id="userModal" hidden>
+    <div class="modal__backdrop" data-close-user></div>
+    <div class="modal__panel">
+      <button class="modal__close" data-close-user aria-label="Fechar">&times;</button>
+      <div class="tabs" id="userTabs">
+        <button class="tab tab--active" data-utab="entrar">Entrar</button>
+        <button class="tab" data-utab="cadastrar">Cadastrar</button>
+      </div>
+
+      <!-- Login -->
+      <form id="formLogin" class="form">
+        <h3 class="modal__title">Bem-vindo de volta</h3>
+        <p class="modal__sub">Entre para acessar os devocionais, pregações e testes.</p>
+        <label class="field">
+          <span>Nome</span>
+          <input type="text" id="loginNome" placeholder="Seu nome" required />
+        </label>
+        <label class="field">
+          <span>Senha</span>
+          <input type="password" id="loginSenha" placeholder="Sua senha" required />
+        </label>
+        <p class="form__error" id="erroLogin"></p>
+        <button type="submit" class="btn btn--gold btn--block">Entrar</button>
+      </form>
+
+      <!-- Cadastro -->
+      <form id="formCadastro" class="form" hidden>
+        <h3 class="modal__title">Criar sua conta</h3>
+        <p class="modal__sub">É rápido. Seu telefone fica visível apenas para a administração.</p>
+        <label class="field">
+          <span>Nome</span>
+          <input type="text" id="cadastroNome" placeholder="Seu nome completo" required />
+        </label>
+        <label class="field">
+          <span>Telefone</span>
+          <input type="tel" id="cadastroTelefone" placeholder="(11) 98765-4321" required />
+        </label>
+        <label class="field">
+          <span>Senha</span>
+          <input type="password" id="cadastroSenha" placeholder="Mínimo 6 caracteres" required />
+        </label>
+        <p class="form__error" id="erroCadastro"></p>
+        <button type="submit" class="btn btn--gold btn--block">Cadastrar</button>
+      </form>
+    </div>
+  </div>
+
   <!-- ADMIN MODAL -->
   <div class="modal" id="adminModal" hidden>
     <div class="modal__backdrop" data-close></div>
-    <div class="modal__panel">
+    <div class="modal__panel modal__panel--wide">
       <button class="modal__close" data-close aria-label="Fechar">&times;</button>
 
       <!-- Login do admin -->
@@ -147,6 +209,7 @@
         <div class="tabs" id="adminTabs">
           <button class="tab tab--active" data-tab="dev">Devocionais</button>
           <button class="tab" data-tab="preg">Pregações</button>
+          <button class="tab" data-tab="users">Usuários</button>
         </div>
 
         <!-- Aba devocionais -->
@@ -192,10 +255,22 @@
           <h4 class="admin__list-title">Publicadas</h4>
           <div id="adminListaPreg" class="admin__list"></div>
         </div>
+
+        <!-- Aba usuários -->
+        <div class="tabpane" id="paneUsers">
+          <div class="stat-row" id="statRow"></div>
+          <h4 class="admin__list-title">Testes realizados por tipo</h4>
+          <div class="chart-box"><canvas id="chartTestes" height="180"></canvas></div>
+          <h4 class="admin__list-title">Usuários cadastrados</h4>
+          <div class="users-table-wrap">
+            <table class="users-table" id="usersTable"></table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+  <script src="/tests.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>
