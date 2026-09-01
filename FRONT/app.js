@@ -6,10 +6,24 @@ const ADMIN_TOKEN_KEY = "labiato_admin_token";
 const getUserToken = () => localStorage.getItem(USER_TOKEN_KEY);
 const getAdminToken = () => localStorage.getItem(ADMIN_TOKEN_KEY);
 
+const PERIODO_LABEL = {
+  semana: "Semana inteira",
+  hoje: "Hoje",
+  dom: "Domingo", seg: "Segunda", ter: "Terça", qua: "Quarta", qui: "Quinta", sex: "Sexta", sab: "Sábado",
+};
+const DIAS_SEMANA = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
+
 // ===== Helpers =====
 function formatarData(iso) {
   if (!iso) return "";
   return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+}
+
+function mesmoDia(iso) {
+  if (!iso) return false;
+  const d = new Date(iso);
+  const hoje = new Date();
+  return d.getFullYear() === hoje.getFullYear() && d.getMonth() === hoje.getMonth() && d.getDate() === hoje.getDate();
 }
 
 async function apiFetch(url, opcoes = {}) {
@@ -17,10 +31,7 @@ async function apiFetch(url, opcoes = {}) {
   const token = getAdminToken() || getUserToken();
   if (token) cabecalhos["Authorization"] = `Bearer ${token}`;
   const resposta = await fetch(url, { ...opcoes, headers: cabecalhos });
-  if (resposta.status === 401 && getUserToken()) {
-    // Sessão de usuário expirada
-    logoutUsuario(true);
-  }
+  if (resposta.status === 401 && getUserToken()) logoutUsuario(true);
   const dados = await resposta.json().catch(() => ({}));
   if (!resposta.ok) throw new Error(dados.message || dados.error || "Erro na requisição");
   return dados;
@@ -41,6 +52,12 @@ function escapar(str) {
   return d.innerHTML;
 }
 
+function badgePeriodo(periodo) {
+  const p = periodo || "hoje";
+  const cls = p === "semana" ? " badge-periodo--semana" : "";
+  return `<span class="badge-periodo${cls}">${PERIODO_LABEL[p] || "Hoje"}</span>`;
+}
+
 // ===== Navegação =====
 document.getElementById("navToggle").addEventListener("click", () => {
   document.querySelector(".nav__inner").classList.toggle("open");
@@ -53,33 +70,17 @@ window.addEventListener("scroll", () => {
 });
 
 // ===== Estado de login do usuário =====
-function atualizarEstadoUsuario() {
+function atualizarNavUsuario() {
   const logado = !!getUserToken();
   document.getElementById("navUser").hidden = !logado;
   document.getElementById("btnEntrar").hidden = logado;
   if (logado) document.getElementById("navUserName").textContent = localStorage.getItem(USER_NAME_KEY) || "";
-
-  // Devocionais
-  document.getElementById("devocionaisLocked").hidden = logado;
-  document.getElementById("listaDevocionais").hidden = !logado;
-  // Pregações
-  document.getElementById("pregacoesLocked").hidden = logado;
-  document.getElementById("listaPregacoes").hidden = !logado;
-  // Testes
-  document.getElementById("testesLocked").hidden = logado;
-  document.getElementById("testesArea").hidden = !logado;
-
-  if (logado) {
-    carregarDevocionais();
-    carregarPregacoes();
-    window.LabiatoTests.renderGrid(document.getElementById("testesArea"));
-  }
 }
 
 function logoutUsuario(silencioso) {
   localStorage.removeItem(USER_TOKEN_KEY);
   localStorage.removeItem(USER_NAME_KEY);
-  atualizarEstadoUsuario();
+  atualizarNavUsuario();
   if (!silencioso) toast("Você saiu da sua conta.");
 }
 document.getElementById("btnSair").addEventListener("click", () => logoutUsuario(false));
@@ -94,14 +95,12 @@ function abrirUser(tab) {
 }
 function fecharUser() { userModal.hidden = true; }
 document.getElementById("btnEntrar").addEventListener("click", () => abrirUser("entrar"));
-document.querySelectorAll("[data-open-entrar]").forEach((b) => b.addEventListener("click", () => abrirUser("entrar")));
 document.querySelectorAll("[data-close-user]").forEach((el) => el.addEventListener("click", fecharUser));
 document.querySelectorAll("#userTabs .tab").forEach((t) =>
   t.addEventListener("click", () => abrirUser(t.dataset.utab))
 );
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") { fecharUser(); fecharAdmin(); } });
 
-// Login
 document.getElementById("formLogin").addEventListener("submit", async (e) => {
   e.preventDefault();
   const erro = document.getElementById("erroLogin");
@@ -116,14 +115,11 @@ document.getElementById("formLogin").addEventListener("submit", async (e) => {
     localStorage.setItem(USER_NAME_KEY, res.data.user.nome);
     document.getElementById("formLogin").reset();
     fecharUser();
-    atualizarEstadoUsuario();
+    atualizarNavUsuario();
     toast(`Bem-vindo(a), ${res.data.user.nome}!`);
-  } catch (err) {
-    erro.textContent = err.message;
-  }
+  } catch (err) { erro.textContent = err.message; }
 });
 
-// Cadastro
 document.getElementById("formCadastro").addEventListener("submit", async (e) => {
   e.preventDefault();
   const erro = document.getElementById("erroCadastro");
@@ -142,32 +138,62 @@ document.getElementById("formCadastro").addEventListener("submit", async (e) => 
     localStorage.setItem(USER_NAME_KEY, res.data.user.nome);
     document.getElementById("formCadastro").reset();
     fecharUser();
-    atualizarEstadoUsuario();
+    atualizarNavUsuario();
     toast(`Conta criada! Bem-vindo(a), ${res.data.user.nome}!`);
-  } catch (err) {
-    erro.textContent = err.message;
-  }
+  } catch (err) { erro.textContent = err.message; }
 });
 
 // ===== Devocionais =====
+let todosDevocionais = [];
+let filtroAtual = "hoje";
+
+function filtrarDevocionais() {
+  const hojeKey = DIAS_SEMANA[new Date().getDay()];
+  if (filtroAtual === "todos") return todosDevocionais;
+  if (filtroAtual === "semana") return todosDevocionais.filter((d) => (d.periodo || "hoje") === "semana");
+  // hoje: semana inteira + dia da semana de hoje + marcados "hoje" criados hoje
+  return todosDevocionais.filter((d) => {
+    const p = d.periodo || "hoje";
+    return p === "semana" || p === hojeKey || (p === "hoje" && mesmoDia(d.createdAt));
+  });
+}
+
+function renderDevocionais() {
+  const container = document.getElementById("listaDevocionais");
+  const lista = filtrarDevocionais();
+  if (!lista.length) { container.innerHTML = `<p class="cards__empty">Nenhum devocional para esta seleção.</p>`; return; }
+  container.innerHTML = lista.map((d) => `
+    <article class="card"><div class="card__body">
+      <div class="card__top">
+        <span class="card__date">${formatarData(d.createdAt)}</span>
+        ${badgePeriodo(d.periodo)}
+      </div>
+      <h3 class="card__title">${escapar(d.titulo)}</h3>
+      ${d.versiculo ? `<p class="card__verse">${escapar(d.versiculo)}</p>` : ""}
+      <p class="card__text">${escapar(d.conteudo)}</p>
+      <span class="card__author">${escapar(d.autor || "Pastores Rodrigo & Suelen Labiato")}</span>
+    </div></article>`).join("");
+}
+
 async function carregarDevocionais() {
   const container = document.getElementById("listaDevocionais");
   container.innerHTML = `<p class="cards__empty">Carregando devocionais…</p>`;
   try {
-    const lista = await apiFetch("/devocional");
-    if (!lista.length) { container.innerHTML = `<p class="cards__empty">Ainda não há devocionais publicados.</p>`; return; }
-    container.innerHTML = lista.map((d) => `
-      <article class="card"><div class="card__body">
-        <span class="card__date">${formatarData(d.createdAt)}</span>
-        <h3 class="card__title">${escapar(d.titulo)}</h3>
-        ${d.versiculo ? `<p class="card__verse">${escapar(d.versiculo)}</p>` : ""}
-        <p class="card__text">${escapar(d.conteudo)}</p>
-        <span class="card__author">${escapar(d.autor || "Pastores Rodrigo & Suelen Labiato")}</span>
-      </div></article>`).join("");
+    todosDevocionais = await apiFetch("/devocional");
+    renderDevocionais();
   } catch (e) {
     container.innerHTML = `<p class="cards__empty">Erro ao carregar: ${escapar(e.message)}</p>`;
   }
 }
+
+document.querySelectorAll("#devFiltros .filter-tab").forEach((t) =>
+  t.addEventListener("click", () => {
+    document.querySelectorAll("#devFiltros .filter-tab").forEach((x) => x.classList.remove("filter-tab--active"));
+    t.classList.add("filter-tab--active");
+    filtroAtual = t.dataset.filtro;
+    renderDevocionais();
+  })
+);
 
 // ===== Pregações =====
 async function carregarPregacoes() {
@@ -220,7 +246,6 @@ document.getElementById("btnAdminSair").addEventListener("click", () => {
   toast("Sessão admin encerrada.");
 });
 
-// Login admin
 document.getElementById("formAdminLogin").addEventListener("submit", async (e) => {
   e.preventDefault();
   const erro = document.getElementById("erroAdmin");
@@ -235,12 +260,9 @@ document.getElementById("formAdminLogin").addEventListener("submit", async (e) =
     document.getElementById("adminCodigo").value = "";
     mostrarPainel();
     toast("Bem-vindo, pastor(a)!");
-  } catch (err) {
-    erro.textContent = err.message;
-  }
+  } catch (err) { erro.textContent = err.message; }
 });
 
-// Tabs admin
 document.querySelectorAll("#adminTabs .tab").forEach((t) =>
   t.addEventListener("click", () => {
     document.querySelectorAll("#adminTabs .tab").forEach((x) => x.classList.remove("tab--active"));
@@ -252,7 +274,6 @@ document.querySelectorAll("#adminTabs .tab").forEach((t) =>
   })
 );
 
-// Criar devocional
 document.getElementById("formDevocional").addEventListener("submit", async (e) => {
   e.preventDefault();
   const erro = document.getElementById("erroDev");
@@ -265,16 +286,16 @@ document.getElementById("formDevocional").addEventListener("submit", async (e) =
         titulo: document.getElementById("devTitulo").value.trim(),
         versiculo: document.getElementById("devVersiculo").value.trim(),
         conteudo: document.getElementById("devConteudo").value.trim(),
+        periodo: document.getElementById("devPeriodo").value,
       }),
     });
     document.getElementById("formDevocional").reset();
     toast("Devocional publicado!");
     carregarAdminDevocionais();
-    if (getUserToken()) carregarDevocionais();
+    carregarDevocionais();
   } catch (err) { erro.textContent = err.message; }
 });
 
-// Criar pregação
 document.getElementById("formPregacao").addEventListener("submit", async (e) => {
   e.preventDefault();
   const erro = document.getElementById("erroPreg");
@@ -292,7 +313,7 @@ document.getElementById("formPregacao").addEventListener("submit", async (e) => 
     document.getElementById("formPregacao").reset();
     toast("Pregação adicionada!");
     carregarAdminPregacoes();
-    if (getUserToken()) carregarPregacoes();
+    carregarPregacoes();
   } catch (err) { erro.textContent = err.message; }
 });
 
@@ -302,7 +323,7 @@ async function carregarAdminDevocionais() {
     const lista = await apiFetch("/devocional");
     if (!lista.length) { c.innerHTML = `<div class="admin__item"><div class="admin__item-info"><span>Nenhum devocional ainda.</span></div></div>`; return; }
     c.innerHTML = lista.map((d) => `
-      <div class="admin__item"><div class="admin__item-info"><strong>${escapar(d.titulo)}</strong><span>${formatarData(d.createdAt)}</span></div>
+      <div class="admin__item"><div class="admin__item-info"><strong>${escapar(d.titulo)}</strong><span>${formatarData(d.createdAt)} &middot; ${PERIODO_LABEL[d.periodo || "hoje"] || "Hoje"}</span></div>
       <button class="admin__del" data-id="${d._id}" data-tipo="dev">Excluir</button></div>`).join("");
   } catch (e) { c.innerHTML = `<div class="admin__item"><div class="admin__item-info"><span>Erro: ${escapar(e.message)}</span></div></div>`; }
 }
@@ -318,49 +339,30 @@ async function carregarAdminPregacoes() {
   } catch (e) { c.innerHTML = `<div class="admin__item"><div class="admin__item-info"><span>Erro: ${escapar(e.message)}</span></div></div>`; }
 }
 
-// Usuários (stats + gráfico + tabela com telefone)
 async function carregarAdminUsers() {
   try {
-    const [stats, usuarios] = await Promise.all([
-      apiFetch("/Admin/estatisticas"),
-      apiFetch("/Admin/usuarios"),
-    ]);
-
+    const [stats, usuarios] = await Promise.all([apiFetch("/Admin/estatisticas"), apiFetch("/Admin/usuarios")]);
     document.getElementById("statRow").innerHTML = `
       <div class="stat-card"><strong>${stats.totalUsuarios}</strong><span>Usuários</span></div>
       <div class="stat-card"><strong>${stats.totalAdmins}</strong><span>Admins</span></div>
       <div class="stat-card"><strong>${stats.totalTutoriais}</strong><span>Devocionais</span></div>
       <div class="stat-card"><strong>${stats.totalResultados}</strong><span>Testes</span></div>`;
-
-    // Gráfico de testes por tipo
     if (chartTestesInstance) chartTestesInstance.destroy();
-    const ctx = document.getElementById("chartTestes");
     const nomes = { casal: "Casal", linguagens: "Linguagens", temperamento: "Temperamento", grafico: "Gráfico do Amor" };
-    chartTestesInstance = new Chart(ctx, {
+    chartTestesInstance = new Chart(document.getElementById("chartTestes"), {
       type: "bar",
-      data: {
-        labels: Object.keys(stats.testesPorTipo).map((k) => nomes[k]),
-        datasets: [{ label: "Testes realizados", data: Object.values(stats.testesPorTipo), backgroundColor: ["#4a1942", "#c9a96e", "#6d2b5f", "#8a4f7d"], borderRadius: 8 }],
-      },
+      data: { labels: Object.keys(stats.testesPorTipo).map((k) => nomes[k]), datasets: [{ label: "Testes realizados", data: Object.values(stats.testesPorTipo), backgroundColor: ["#4a1942", "#c9a96e", "#6d2b5f", "#8a4f7d"], borderRadius: 8 }] },
       options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } },
     });
-
-    // Tabela de usuários com telefone
     document.getElementById("usersTable").innerHTML = `
       <thead><tr><th>Nome</th><th>Telefone</th><th>Tipo</th><th>Desde</th></tr></thead>
       <tbody>${usuarios.map((u) => `
-        <tr>
-          <td>${escapar(u.nome)}</td>
-          <td>${escapar(u.telefone || "—")}</td>
-          <td><span class="badge ${u.role === "admin" ? "badge--admin" : "badge--user"}">${u.role === "admin" ? "Admin" : "Usuário"}</span></td>
-          <td>${formatarData(u.createdAt)}</td>
-        </tr>`).join("")}</tbody>`;
-  } catch (e) {
-    toast("Erro ao carregar usuários: " + e.message);
-  }
+        <tr><td>${escapar(u.nome)}</td><td>${escapar(u.telefone || "—")}</td>
+        <td><span class="badge ${u.role === "admin" ? "badge--admin" : "badge--user"}">${u.role === "admin" ? "Admin" : "Usuário"}</span></td>
+        <td>${formatarData(u.createdAt)}</td></tr>`).join("")}</tbody>`;
+  } catch (e) { toast("Erro ao carregar usuários: " + e.message); }
 }
 
-// Exclusão (delegação)
 document.addEventListener("click", async (e) => {
   const btn = e.target.closest(".admin__del");
   if (!btn) return;
@@ -369,10 +371,13 @@ document.addEventListener("click", async (e) => {
   try {
     await apiFetch(url, { method: "DELETE" });
     toast(tipo === "dev" ? "Devocional excluído." : "Pregação removida.");
-    if (tipo === "dev") { carregarAdminDevocionais(); if (getUserToken()) carregarDevocionais(); }
-    else { carregarAdminPregacoes(); if (getUserToken()) carregarPregacoes(); }
+    if (tipo === "dev") { carregarAdminDevocionais(); carregarDevocionais(); }
+    else { carregarAdminPregacoes(); carregarPregacoes(); }
   } catch (err) { toast(err.message); }
 });
 
 // ===== Init =====
-atualizarEstadoUsuario();
+atualizarNavUsuario();
+carregarDevocionais();
+carregarPregacoes();
+window.LabiatoTests.renderGrid(document.getElementById("testesArea"));

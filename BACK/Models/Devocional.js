@@ -21,6 +21,11 @@ const DevocionalSchema = new mongoose.Schema(
       trim: true,
       default: "Pastores Rodrigo & Suelen Labiato",
     },
+    periodo: {
+      type: String,
+      trim: true,
+      default: "hoje",
+    },
   },
   {
     collection: "devocionais",

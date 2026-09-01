@@ -5,8 +5,8 @@ import adminMiddleware from "../Middlewares/adminMiddlewares.js";
 
 const router = express.Router();
 
-// Usuários logados podem assistir às pregações
-router.get("/", authMiddleware, PregacaoControllers.listPregacoes);
+// Público: qualquer pessoa pode assistir às pregações
+router.get("/", PregacaoControllers.listPregacoes);
 
 // Admin: adicionar e remover pregações
 router.post("/", authMiddleware, adminMiddleware, PregacaoControllers.createPregacao);

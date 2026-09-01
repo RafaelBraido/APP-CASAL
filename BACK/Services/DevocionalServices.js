@@ -1,7 +1,9 @@
 import Devocional from "../Models/Devocional.js";
 
+const PERIODOS_VALIDOS = ["semana", "hoje", "seg", "ter", "qua", "qui", "sex", "sab", "dom"];
+
 const createDevocional = async (data) => {
-  const { titulo, conteudo, versiculo } = data;
+  const { titulo, conteudo, versiculo, periodo } = data;
 
   if (!titulo || !conteudo) {
     const error = new Error("Título e conteúdo são obrigatórios");
@@ -9,10 +11,13 @@ const createDevocional = async (data) => {
     throw error;
   }
 
+  const periodoFinal = PERIODOS_VALIDOS.includes(periodo) ? periodo : "hoje";
+
   return Devocional.create({
     titulo,
     conteudo,
     versiculo: versiculo || "",
+    periodo: periodoFinal,
   });
 };
 
@@ -21,7 +26,7 @@ const listDevocionais = async () => {
 };
 
 const updateDevocional = async (devocionalId, data) => {
-  const { titulo, conteudo, versiculo } = data;
+  const { titulo, conteudo, versiculo, periodo } = data;
 
   if (!titulo || !conteudo) {
     const error = new Error("Título e conteúdo são obrigatórios");
@@ -29,9 +34,14 @@ const updateDevocional = async (devocionalId, data) => {
     throw error;
   }
 
+  const atualizacao = { titulo, conteudo, versiculo: versiculo || "" };
+  if (periodo && PERIODOS_VALIDOS.includes(periodo)) {
+    atualizacao.periodo = periodo;
+  }
+
   const devocional = await Devocional.findByIdAndUpdate(
     devocionalId,
-    { titulo, conteudo, versiculo: versiculo || "" },
+    atualizacao,
     { new: true, runValidators: true }
   );
 

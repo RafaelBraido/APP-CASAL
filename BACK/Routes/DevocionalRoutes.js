@@ -5,8 +5,8 @@ import adminMiddleware from "../Middlewares/adminMiddlewares.js";
 
 const router = express.Router();
 
-// Usuários logados podem ver os devocionais
-router.get("/", authMiddleware, DevocionalControllers.listDevocionais);
+// Público: qualquer pessoa pode ver os devocionais
+router.get("/", DevocionalControllers.listDevocionais);
 
 // Admin: criar, atualizar e deletar
 router.post("/", authMiddleware, adminMiddleware, DevocionalControllers.createDevocional);

@@ -307,12 +307,14 @@ function finalizar(container) {
     });
   }
 
-  // Salvar resultado no servidor
-  apiFetch("/resultado", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ tipoTeste: teste.id, titulo: r.titulo, resumo: r.resumo, detalhes: r.detalhes }),
-  }).then(() => toast("Resultado salvo!")).catch(() => {});
+  // Salvar resultado no servidor (apenas para usuários logados)
+  if (typeof getUserToken === "function" && getUserToken()) {
+    apiFetch("/resultado", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tipoTeste: teste.id, titulo: r.titulo, resumo: r.resumo, detalhes: r.detalhes }),
+    }).then(() => toast("Resultado salvo!")).catch(() => {});
+  }
 
   document.getElementById("quizRetry").addEventListener("click", () => start(teste.id, container));
   document.getElementById("quizHome").addEventListener("click", () => renderGrid(container));

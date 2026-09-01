@@ -30,7 +30,7 @@
           <span id="navUserName"></span>
           <button class="btn btn--ghost btn--sm" id="btnSair">Sair</button>
         </div>
-        <button class="btn btn--gold btn--sm" id="btnEntrar">Entrar</button>
+        <button class="btn btn--gold btn--sm" id="btnEntrar">Criar conta</button>
         <button class="btn btn--ghost btn--sm" id="btnAdmin">Admin</button>
       </div>
       <button class="nav__toggle" id="navToggle" aria-label="Menu">
@@ -42,12 +42,13 @@
   <!-- HERO -->
   <section class="hero" id="inicio">
     <div class="hero__overlay"></div>
+    <div class="hero__glow"></div>
     <div class="hero__content">
       <p class="hero__kicker">Pastores &middot; Rodrigo Labiato da Silva &amp; Suelen Braido Labiato</p>
       <h1 class="hero__title">Um coração <em>só</em> para servir</h1>
-      <p class="hero__sub">Devocionais, pregações e testes para fortalecer a vida a dois — guiados pela fé que nos une.</p>
+      <p class="hero__sub">Devocionais diários, pregações e testes para fortalecer a vida a dois — guiados pela fé que nos une.</p>
       <div class="hero__actions">
-        <a href="#devocionais" class="btn btn--gold" data-nav>Ler devocionais</a>
+        <a href="#devocionais" class="btn btn--gold" data-nav>Devocional de hoje</a>
         <a href="#testes" class="btn btn--outline" data-nav>Fazer um teste</a>
       </div>
     </div>
@@ -60,18 +61,14 @@
       <div class="section__head">
         <p class="section__eyebrow">Palavra para o coração</p>
         <h2 class="section__title">Devocionais</h2>
-        <p class="section__desc">Mensagens para nutrir a vida do casal, dia após dia.</p>
+        <p class="section__desc">Mensagens diárias para nutrir a vida do casal.</p>
       </div>
-      <div id="devocionaisWrap">
-        <div class="locked" id="devocionaisLocked" hidden>
-          <div class="locked__card">
-            <h3>Os devocionais são para quem faz parte</h3>
-            <p>Entre na sua conta ou cadastre-se para ler os devocionais dos pastores.</p>
-            <button class="btn btn--gold" data-open-entrar>Entrar / Cadastrar</button>
-          </div>
-        </div>
-        <div class="cards" id="listaDevocionais" hidden></div>
+      <div class="filter-tabs" id="devFiltros">
+        <button class="filter-tab filter-tab--active" data-filtro="hoje">Hoje</button>
+        <button class="filter-tab" data-filtro="semana">Semana</button>
+        <button class="filter-tab" data-filtro="todos">Todos</button>
       </div>
+      <div class="cards" id="listaDevocionais"></div>
     </div>
   </section>
 
@@ -83,16 +80,7 @@
         <h2 class="section__title">Pregações</h2>
         <p class="section__desc">Assista às pregações dos pastores Rodrigo &amp; Suelen direto do YouTube.</p>
       </div>
-      <div id="pregacoesWrap">
-        <div class="locked" id="pregacoesLocked" hidden>
-          <div class="locked__card">
-            <h3>As pregações esperam por você</h3>
-            <p>Entre na sua conta ou cadastre-se para assistir às pregações.</p>
-            <button class="btn btn--gold" data-open-entrar>Entrar / Cadastrar</button>
-          </div>
-        </div>
-        <div class="cards" id="listaPregacoes" hidden></div>
-      </div>
+      <div class="cards" id="listaPregacoes"></div>
     </div>
   </section>
 
@@ -104,16 +92,7 @@
         <h2 class="section__title">Testes para o casal</h2>
         <p class="section__desc">Testes interativos para vocês se entenderem e crescerem juntos.</p>
       </div>
-      <div id="testesWrap">
-        <div class="locked" id="testesLocked" hidden>
-          <div class="locked__card">
-            <h3>Os testes são para quem faz parte</h3>
-            <p>Entre na sua conta ou cadastre-se para fazer os testes do casal.</p>
-            <button class="btn btn--gold" data-open-entrar>Entrar / Cadastrar</button>
-          </div>
-        </div>
-        <div id="testesArea" hidden></div>
-      </div>
+      <div id="testesArea"></div>
     </div>
   </section>
 
@@ -138,13 +117,12 @@
       <button class="modal__close" data-close-user aria-label="Fechar">&times;</button>
       <div class="tabs" id="userTabs">
         <button class="tab tab--active" data-utab="entrar">Entrar</button>
-        <button class="tab" data-utab="cadastrar">Cadastrar</button>
+        <button class="tab" data-utab="cadastrar">Criar conta</button>
       </div>
 
-      <!-- Login -->
       <form id="formLogin" class="form">
         <h3 class="modal__title">Bem-vindo de volta</h3>
-        <p class="modal__sub">Entre para acessar os devocionais, pregações e testes.</p>
+        <p class="modal__sub">Entre para salvar seus resultados de testes.</p>
         <label class="field">
           <span>Nome</span>
           <input type="text" id="loginNome" placeholder="Seu nome" required />
@@ -157,7 +135,6 @@
         <button type="submit" class="btn btn--gold btn--block">Entrar</button>
       </form>
 
-      <!-- Cadastro -->
       <form id="formCadastro" class="form" hidden>
         <h3 class="modal__title">Criar sua conta</h3>
         <p class="modal__sub">É rápido. Seu telefone fica visível apenas para a administração.</p>
@@ -174,7 +151,7 @@
           <input type="password" id="cadastroSenha" placeholder="Mínimo 6 caracteres" required />
         </label>
         <p class="form__error" id="erroCadastro"></p>
-        <button type="submit" class="btn btn--gold btn--block">Cadastrar</button>
+        <button type="submit" class="btn btn--gold btn--block">Criar conta</button>
       </form>
     </div>
   </div>
@@ -185,7 +162,6 @@
     <div class="modal__panel modal__panel--wide">
       <button class="modal__close" data-close aria-label="Fechar">&times;</button>
 
-      <!-- Login do admin -->
       <div id="adminLogin">
         <h3 class="modal__title">Área do Admin</h3>
         <p class="modal__sub">Acesso restrito aos pastores. Informe o código de administração.</p>
@@ -199,7 +175,6 @@
         </form>
       </div>
 
-      <!-- Painel do admin -->
       <div id="adminPanel" hidden>
         <div class="admin__head">
           <h3 class="modal__title">Painel de Administração</h3>
@@ -226,6 +201,20 @@
             <label class="field">
               <span>Conteúdo</span>
               <textarea id="devConteudo" rows="5" placeholder="Escreva o devocional…" required></textarea>
+            </label>
+            <label class="field">
+              <span>Quando exibir</span>
+              <select id="devPeriodo">
+                <option value="hoje">Hoje</option>
+                <option value="semana">Semana inteira</option>
+                <option value="dom">Domingo</option>
+                <option value="seg">Segunda-feira</option>
+                <option value="ter">Terça-feira</option>
+                <option value="qua">Quarta-feira</option>
+                <option value="qui">Quinta-feira</option>
+                <option value="sex">Sexta-feira</option>
+                <option value="sab">Sábado</option>
+              </select>
             </label>
             <p class="form__error" id="erroDev"></p>
             <button type="submit" class="btn btn--gold btn--block">Publicar devocional</button>
