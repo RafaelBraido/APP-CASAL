@@ -305,9 +305,59 @@ const TESTES = [
 
 // ===== Renderização =====
 let testeAtivo = null;
+const PASTORES_FOTO = "https://media.base44.com/images/public/6a95e99d10e64c944d7a3b70/ec49256db_Foto-Rodrigo-e-Suelen-1.jpg";
+
+// Demonstração para visitantes sem conta
+function renderDemo(container) {
+  testeAtivo = null;
+  const amostra = [
+    { icon: "💬", nome: "Palavras de Afirmação", pct: 40, cor: "#c9a96e" },
+    { icon: "🤗", nome: "Toque Físico", pct: 27, cor: "#b86b5a" },
+    { icon: "🤝", nome: "Atos de Serviço", pct: 20, cor: "#6d2b5f" },
+    { icon: "⏳", nome: "Tempo de Qualidade", pct: 13, cor: "#4a1942" },
+    { icon: "🎁", nome: "Receber Presentes", pct: 7, cor: "#8a4f7d" },
+  ];
+  container.innerHTML = `
+    <div class="demo">
+      <div class="demo__hero">
+        <img class="demo__photo" src="${PASTORES_FOTO}" alt="Pastores Rodrigo e Suelen Labiak" />
+        <div class="demo__hero-text">
+          <p class="demo__kicker">Demonstração</p>
+          <h3>Testes para o casal, com resultado na hora</h3>
+          <p>Os pastores Rodrigo &amp; Suelen Labiak prepararam testes interativos para o seu casal. Crie uma conta gratuita para responder e descobrir o seu perfil.</p>
+          <div class="hero__actions">
+            <button class="btn btn--gold" id="demoConta">Criar conta e começar</button>
+            <a class="btn btn--ghost" href="#/devocionais">Ver devocionais</a>
+          </div>
+        </div>
+      </div>
+      <div class="demo__grid">
+        ${TESTES.map((t) => `
+          <div class="demo__card">
+            <span class="demo__card-icon" style="background:${t.cor}">${t.icon}</span>
+            <strong>${t.nome}</strong>
+            <span>${t.descricao}</span>
+            <span class="demo__lock">🔒 Exclusivo para membros</span>
+          </div>`).join("")}
+      </div>
+      <div class="demo__sample">
+        <p class="demo__kicker">Assim fica o seu resultado</p>
+        <div class="ranking">
+          ${amostra.map((x) => `
+          <div class="rank-row">
+            <span class="rank-label">${x.icon} ${x.nome}</span>
+            <div class="rank-bar"><div class="rank-bar-fill" style="width:${x.pct}%;background:${x.cor}"></div></div>
+            <span class="rank-pct">${x.pct}%</span>
+          </div>`).join("")}
+        </div>
+      </div>
+    </div>`;
+  document.getElementById("demoConta").addEventListener("click", () => abrirUser("cadastrar"));
+}
 
 function renderGrid(container) {
   testeAtivo = null;
+  if (typeof getUserToken !== "function" || !getUserToken()) return renderDemo(container);
   container.innerHTML = `
     <div class="quiz__intro" style="margin-bottom:24px">
       <p>Escolha um teste e veja o resultado na hora. Sem respostas certas — apenas a verdade de quem vocês são.</p>
@@ -327,6 +377,7 @@ function renderGrid(container) {
 }
 
 function start(id, container) {
+  if (typeof getUserToken !== "function" || !getUserToken()) return renderDemo(container);
   const teste = TESTES.find((t) => t.id === id);
   if (!teste) {
     container.innerHTML = `<div class="quiz__box"><h3 class="quiz__question">Teste não encontrado</h3><a class="btn btn--gold" href="#/testes">Voltar aos testes</a></div>`;

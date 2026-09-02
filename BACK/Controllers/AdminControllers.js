@@ -40,6 +40,15 @@ const AdminController = {
     }
   },
 
+  async listarResultados(req, res, next) {
+    try {
+      const resultados = await AdminService.listarResultados();
+      res.json(resultados);
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async estatisticas(req, res, next) {
     try {
       const stats = await AdminService.estatisticas();

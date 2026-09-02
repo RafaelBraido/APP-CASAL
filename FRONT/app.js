@@ -1,7 +1,7 @@
-// ===== Rodrigo & Suelen Labiato — app =====
-const USER_TOKEN_KEY = "labiato_user_token";
-const USER_NAME_KEY = "labiato_user_nome";
-const ADMIN_TOKEN_KEY = "labiato_admin_token";
+// ===== Rodrigo & Suelen Labiak — app =====
+const USER_TOKEN_KEY = "labiak_user_token";
+const USER_NAME_KEY = "labiak_user_nome";
+const ADMIN_TOKEN_KEY = "labiak_admin_token";
 
 const getUserToken = () => localStorage.getItem(USER_TOKEN_KEY);
 const getAdminToken = () => localStorage.getItem(ADMIN_TOKEN_KEY);
@@ -12,6 +12,7 @@ const PERIODO_LABEL = {
   dom: "Domingo", seg: "Segunda", ter: "Terça", qua: "Quarta", qui: "Quinta", sex: "Sexta", sab: "Sábado",
 };
 const DIAS_SEMANA = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
+const TESTE_NOMES = { casal: "Casal", linguagens: "Linguagens do Amor", temperamento: "Temperamento", grafico: "Gráfico do Amor" };
 
 // ===== Helpers =====
 function formatarData(iso) {
@@ -101,6 +102,8 @@ function logoutUsuario(silencioso) {
   localStorage.removeItem(USER_TOKEN_KEY);
   localStorage.removeItem(USER_NAME_KEY);
   atualizarNavUsuario();
+  location.hash = "#/testes" === location.hash ? "#/" : location.hash;
+  rotear();
   if (!silencioso) toast("Você saiu da sua conta.");
 }
 document.getElementById("btnSair").addEventListener("click", () => logoutUsuario(false));
@@ -137,6 +140,7 @@ document.getElementById("formLogin").addEventListener("submit", async (e) => {
     fecharUser();
     atualizarNavUsuario();
     toast(`Bem-vindo(a), ${res.data.user.nome}!`);
+    rotear();
   } catch (err) { erro.textContent = err.message; }
 });
 
@@ -161,6 +165,7 @@ document.getElementById("formCadastro").addEventListener("submit", async (e) => 
     fecharUser();
     atualizarNavUsuario();
     toast(`Conta criada! Bem-vindo(a), ${res.data.user.nome}!`);
+    rotear();
   } catch (err) { erro.textContent = err.message; }
 });
 
@@ -192,7 +197,7 @@ function renderDevocionais() {
       <h3 class="card__title">${escapar(d.titulo)}</h3>
       ${d.versiculo ? `<p class="card__verse">${escapar(d.versiculo)}</p>` : ""}
       <p class="card__text">${escapar(d.conteudo)}</p>
-      <span class="card__author">${escapar(d.autor || "Pastores Rodrigo & Suelen Labiato")}</span>
+      <span class="card__author">${escapar(d.autor || "Pastores Rodrigo & Suelen Labiak")}</span>
     </div></article>`).join("");
 }
 
@@ -289,9 +294,10 @@ document.querySelectorAll("#adminTabs .tab").forEach((t) =>
     document.querySelectorAll("#adminTabs .tab").forEach((x) => x.classList.remove("tab--active"));
     t.classList.add("tab--active");
     document.querySelectorAll(".tabpane").forEach((p) => p.classList.remove("tabpane--active"));
-    const id = t.dataset.tab === "dev" ? "paneDev" : t.dataset.tab === "preg" ? "panePreg" : "paneUsers";
+    const id = { dev: "paneDev", preg: "panePreg", users: "paneUsers", resultados: "paneResultados" }[t.dataset.tab];
     document.getElementById(id).classList.add("tabpane--active");
     if (t.dataset.tab === "users") carregarAdminUsers();
+    if (t.dataset.tab === "resultados") carregarAdminResults();
   })
 );
 
@@ -369,22 +375,50 @@ async function carregarAdminUsers() {
       <div class="stat-card"><strong>${stats.totalTutoriais}</strong><span>Devocionais</span></div>
       <div class="stat-card"><strong>${stats.totalResultados}</strong><span>Testes</span></div>`;
     if (chartTestesInstance) chartTestesInstance.destroy();
-    const nomes = { casal: "Casal", linguagens: "Linguagens", temperamento: "Temperamento", grafico: "Gráfico do Amor" };
     chartTestesInstance = new Chart(document.getElementById("chartTestes"), {
       type: "bar",
-      data: { labels: Object.keys(stats.testesPorTipo).map((k) => nomes[k]), datasets: [{ label: "Testes realizados", data: Object.values(stats.testesPorTipo), backgroundColor: ["#4a1942", "#c9a96e", "#6d2b5f", "#8a4f7d"], borderRadius: 8 }] },
+      data: { labels: Object.keys(stats.testesPorTipo).map((k) => TESTE_NOMES[k] || k), datasets: [{ label: "Testes realizados", data: Object.values(stats.testesPorTipo), backgroundColor: ["#4a1942", "#c9a96e", "#6d2b5f", "#8a4f7d"], borderRadius: 8 }] },
       options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } },
     });
     document.getElementById("usersTable").innerHTML = `
-      <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Tipo</th><th>Desde</th></tr></thead>
-      <tbody>${usuarios.map((u) => `
+      <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Tipo</th><th>Desde</th><th>Ações</th></tr></thead>
+      <tbody>${usuarios.map((u) => {
+        const acao = u.nome === "Administrador" ? "—"
+          : `<button class="user-action" data-nome="${escapar(u.nome)}" data-action="${u.role === "admin" ? "rebaixar" : "promover"}">${u.role === "admin" ? "Rebaixar" : "Promover"}</button>`;
+        return `
         <tr><td>${escapar(u.nome)}</td><td>${escapar(u.email || "—")}</td><td>${escapar(u.telefone || "—")}</td>
         <td><span class="badge ${u.role === "admin" ? "badge--admin" : "badge--user"}">${u.role === "admin" ? "Admin" : "Usuário"}</span></td>
-        <td>${formatarData(u.createdAt)}</td></tr>`).join("")}</tbody>`;
+        <td>${formatarData(u.createdAt)}</td><td>${acao}</td></tr>`;
+      }).join("")}</tbody>`;
   } catch (e) { toast("Erro ao carregar usuários: " + e.message); }
 }
 
+async function carregarAdminResults() {
+  const tabela = document.getElementById("resultsTable");
+  try {
+    const lista = await apiFetch("/Admin/resultados");
+    if (!lista.length) { tabela.innerHTML = `<tbody><tr><td>Nenhum resultado ainda.</td></tr></tbody>`; return; }
+    tabela.innerHTML = `
+      <thead><tr><th>Usuário</th><th>Teste</th><th>Resultado</th><th>Data</th></tr></thead>
+      <tbody>${lista.map((r) => `
+        <tr><td>${escapar(r.usuario?.nome || "—")}</td><td>${TESTE_NOMES[r.tipoTeste] || r.tipoTeste}</td><td>${escapar(r.titulo)}</td><td>${formatarData(r.createdAt)}</td></tr>`).join("")}</tbody>`;
+  } catch (e) { tabela.innerHTML = `<tbody><tr><td>Erro: ${escapar(e.message)}</td></tr></tbody>`; }
+}
+
 document.addEventListener("click", async (e) => {
+  const ua = e.target.closest(".user-action");
+  if (ua) {
+    try {
+      const res = await apiFetch(`/Admin/${ua.dataset.action}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome: ua.dataset.nome }),
+      });
+      toast(res.message || "Usuário atualizado.");
+      carregarAdminUsers();
+    } catch (err) { toast(err.message); }
+    return;
+  }
   const btn = e.target.closest(".admin__del");
   if (!btn) return;
   const { id, tipo } = btn.dataset;

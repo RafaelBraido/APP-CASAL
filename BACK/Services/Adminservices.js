@@ -52,6 +52,13 @@ const AdminService = {
     return User.find({}, "nome telefone email role createdAt").sort({ createdAt: -1 });
   },
 
+  async listarResultados() {
+    return Resultado.find()
+      .populate("usuario", "nome email")
+      .sort({ createdAt: -1 })
+      .limit(100);
+  },
+
   async promoverParaAdmin(nome) {
     const usuario = await User.findOneAndUpdate(
       { nome: String(nome || "").trim() },

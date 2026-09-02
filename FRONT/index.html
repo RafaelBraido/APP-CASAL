@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rodrigo & Suelen Labiato — Pastores</title>
+  <title>Rodrigo & Suelen Labiak — Pastores</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -17,7 +17,7 @@
     <div class="nav__inner">
       <a href="#/" class="nav__brand">
         <span class="nav__brand-mark">R<span class="amp">&amp;</span>S</span>
-        <span class="nav__brand-text">Labiato</span>
+        <span class="nav__brand-text">Labiak</span>
       </a>
       <nav class="nav__links" id="navLinks">
         <a href="#/" data-rota="home">Início</a>
@@ -46,13 +46,18 @@
       <section class="hero">
         <div class="hero__overlay"></div>
         <div class="hero__glow"></div>
-        <div class="hero__content">
-          <p class="hero__kicker">Pastores &middot; Rodrigo Labiato da Silva &amp; Suelen Braido Labiato</p>
-          <h1 class="hero__title">Um coração <em>só</em> para servir</h1>
-          <p class="hero__sub">Devocionais diários, pregações e testes para fortalecer a vida a dois — guiados pela fé que nos une.</p>
-          <div class="hero__actions">
-            <a href="#/devocionais" class="btn btn--gold">Devocional de hoje</a>
-            <a href="#/testes" class="btn btn--outline">Fazer um teste</a>
+        <div class="hero__content hero__content--split">
+          <div class="hero__text">
+            <p class="hero__kicker">Pastores &middot; Rodrigo &amp; Suelen Labiak</p>
+            <h1 class="hero__title">Um coração <em>só</em> para servir</h1>
+            <p class="hero__sub">Devocionais diários, pregações e testes para fortalecer a vida a dois — guiados pela fé que nos une.</p>
+            <div class="hero__actions">
+              <a href="#/devocionais" class="btn btn--gold">Devocional de hoje</a>
+              <a href="#/testes" class="btn btn--outline">Fazer um teste</a>
+            </div>
+          </div>
+          <div class="hero__photo">
+            <img src="https://media.base44.com/images/public/6a95e99d10e64c944d7a3b70/ec49256db_Foto-Rodrigo-e-Suelen-1.jpg" alt="Pastores Rodrigo e Suelen Labiak" />
           </div>
         </div>
       </section>
@@ -142,7 +147,7 @@
       <div class="footer__brand">
         <span class="nav__brand-mark">R<span class="amp">&amp;</span>S</span>
         <div>
-          <strong>Rodrigo &amp; Suelen Labiato</strong>
+          <strong>Rodrigo &amp; Suelen Labiak</strong>
           <p>Pastores &middot; servindo com amor</p>
         </div>
       </div>
@@ -162,7 +167,7 @@
 
       <form id="formLogin" class="form">
         <h3 class="modal__title">Bem-vindo de volta</h3>
-        <p class="modal__sub">Entre para salvar seus resultados de testes.</p>
+        <p class="modal__sub">Entre para fazer os testes e salvar seus resultados.</p>
         <label class="field">
           <span>Nome</span>
           <input type="text" id="loginNome" placeholder="Seu nome" required />
@@ -229,6 +234,7 @@
           <button class="tab tab--active" data-tab="dev">Devocionais</button>
           <button class="tab" data-tab="preg">Pregações</button>
           <button class="tab" data-tab="users">Usuários</button>
+          <button class="tab" data-tab="resultados">Resultados</button>
         </div>
 
         <!-- Aba devocionais -->
@@ -297,6 +303,14 @@
           <h4 class="admin__list-title">Usuários cadastrados</h4>
           <div class="users-table-wrap">
             <table class="users-table" id="usersTable"></table>
+          </div>
+        </div>
+
+        <!-- Aba resultados -->
+        <div class="tabpane" id="paneResultados">
+          <h4 class="admin__list-title">Resultados dos testes</h4>
+          <div class="users-table-wrap">
+            <table class="users-table" id="resultsTable"></table>
           </div>
         </div>
       </div>
