@@ -248,3 +248,57 @@ img { max-width: 100%; display: block; }
   .quiz__intro, .quiz__box, .quiz__result { padding: 28px; }
   .footer__inner { flex-direction: column; text-align: center; }
 }
+
+/* ===== App: páginas (rotas) ===== */
+.page { display: none; min-height: 55vh; }
+.page--active { display: block; animation: pageIn .45s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes pageIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.page__pad { padding: 64px 0 90px; }
+.nav__links a.nav__link--active { color: var(--wine); font-weight: 700; }
+.nav__links a.nav__link--active::after { width: 100%; }
+
+/* ===== Cards de destaque (home) ===== */
+.highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 26px; }
+.highlight-card {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 34px 28px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px;
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease;
+  animation: rise .6s ease both;
+}
+.highlight-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.highlight-icon { font-size: 2.2rem; }
+.highlight-card h3 { font-size: 1.5rem; color: var(--wine); font-family: "Cormorant Garamond", serif; }
+.highlight-card p { color: var(--muted); font-size: .92rem; flex: 1; }
+.highlight-cta { color: var(--gold-deep); font-weight: 600; font-size: .9rem; margin-top: 6px; }
+
+/* ===== Quiz: pares de afirmações ===== */
+.quiz__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.quiz__pair .quiz__opt { display: flex; align-items: center; }
+.quiz__opt-letter {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 26px; height: 26px; border-radius: 50%; background: var(--cream-2);
+  color: var(--wine); font-weight: 700; font-size: .78rem; margin-right: 10px;
+}
+
+/* ===== Ranking visual do resultado ===== */
+.ranking { display: flex; flex-direction: column; gap: 12px; margin: 26px 0 22px; text-align: left; }
+.rank-row { display: grid; grid-template-columns: 180px 1fr 44px; align-items: center; gap: 12px; }
+.rank-label { font-size: .88rem; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+.rank-bar { height: 12px; background: var(--cream-2); border-radius: 999px; overflow: hidden; }
+.rank-bar-fill { height: 100%; border-radius: 999px; transition: width .9s cubic-bezier(.2,.8,.2,1); }
+.rank-pct { font-size: .82rem; font-weight: 700; color: var(--wine); text-align: right; }
+
+.result__hero { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 16px 0; }
+.result__icon {
+  width: 86px; height: 86px; border-radius: 50%; font-size: 2.4rem;
+  background: linear-gradient(135deg, var(--wine), var(--plum));
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 14px 34px rgba(74,25,66,.32);
+}
+.test-card__meta { font-size: .78rem; color: var(--gold-deep); font-weight: 600; }
+
+@media (max-width: 640px) {
+  .quiz__pair { grid-template-columns: 1fr; }
+  .rank-row { grid-template-columns: 128px 1fr 40px; }
+  .rank-label { font-size: .8rem; }
+}

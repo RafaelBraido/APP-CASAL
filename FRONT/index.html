@@ -15,15 +15,15 @@
   <!-- NAV -->
   <header class="nav" id="nav">
     <div class="nav__inner">
-      <a href="#inicio" class="nav__brand" data-nav>
+      <a href="#/" class="nav__brand">
         <span class="nav__brand-mark">R<span class="amp">&amp;</span>S</span>
         <span class="nav__brand-text">Labiato</span>
       </a>
       <nav class="nav__links" id="navLinks">
-        <a href="#inicio" data-nav>Início</a>
-        <a href="#devocionais" data-nav>Devocionais</a>
-        <a href="#pregacoes" data-nav>Pregações</a>
-        <a href="#testes" data-nav>Testes</a>
+        <a href="#/" data-rota="home">Início</a>
+        <a href="#/devocionais" data-rota="devocionais">Devocionais</a>
+        <a href="#/pregacoes" data-rota="pregacoes">Pregações</a>
+        <a href="#/testes" data-rota="testes">Testes</a>
       </nav>
       <div class="nav__right">
         <div class="nav__user" id="navUser" hidden>
@@ -39,62 +39,102 @@
     </div>
   </header>
 
-  <!-- HERO -->
-  <section class="hero" id="inicio">
-    <div class="hero__overlay"></div>
-    <div class="hero__glow"></div>
-    <div class="hero__content">
-      <p class="hero__kicker">Pastores &middot; Rodrigo Labiato da Silva &amp; Suelen Braido Labiato</p>
-      <h1 class="hero__title">Um coração <em>só</em> para servir</h1>
-      <p class="hero__sub">Devocionais diários, pregações e testes para fortalecer a vida a dois — guiados pela fé que nos une.</p>
-      <div class="hero__actions">
-        <a href="#devocionais" class="btn btn--gold" data-nav>Devocional de hoje</a>
-        <a href="#testes" class="btn btn--outline" data-nav>Fazer um teste</a>
-      </div>
-    </div>
-    <div class="hero__scroll" aria-hidden="true">↓</div>
-  </section>
+  <main id="app">
 
-  <!-- DEVOCIONAIS -->
-  <section class="section" id="devocionais">
-    <div class="container">
-      <div class="section__head">
-        <p class="section__eyebrow">Palavra para o coração</p>
-        <h2 class="section__title">Devocionais</h2>
-        <p class="section__desc">Mensagens diárias para nutrir a vida do casal.</p>
-      </div>
-      <div class="filter-tabs" id="devFiltros">
-        <button class="filter-tab filter-tab--active" data-filtro="hoje">Hoje</button>
-        <button class="filter-tab" data-filtro="semana">Semana</button>
-        <button class="filter-tab" data-filtro="todos">Todos</button>
-      </div>
-      <div class="cards" id="listaDevocionais"></div>
-    </div>
-  </section>
+    <!-- PÁGINA: INÍCIO -->
+    <section class="page page--active" id="page-home">
+      <section class="hero">
+        <div class="hero__overlay"></div>
+        <div class="hero__glow"></div>
+        <div class="hero__content">
+          <p class="hero__kicker">Pastores &middot; Rodrigo Labiato da Silva &amp; Suelen Braido Labiato</p>
+          <h1 class="hero__title">Um coração <em>só</em> para servir</h1>
+          <p class="hero__sub">Devocionais diários, pregações e testes para fortalecer a vida a dois — guiados pela fé que nos une.</p>
+          <div class="hero__actions">
+            <a href="#/devocionais" class="btn btn--gold">Devocional de hoje</a>
+            <a href="#/testes" class="btn btn--outline">Fazer um teste</a>
+          </div>
+        </div>
+      </section>
 
-  <!-- PREGAÇÕES -->
-  <section class="section section--alt" id="pregacoes">
-    <div class="container">
-      <div class="section__head">
-        <p class="section__eyebrow">Mensagens da igreja</p>
-        <h2 class="section__title">Pregações</h2>
-        <p class="section__desc">Assista às pregações dos pastores Rodrigo &amp; Suelen direto do YouTube.</p>
-      </div>
-      <div class="cards" id="listaPregacoes"></div>
-    </div>
-  </section>
+      <section class="section">
+        <div class="container">
+          <div class="section__head">
+            <p class="section__eyebrow">Bem-vindo ao app</p>
+            <h2 class="section__title">Tudo para o seu casal</h2>
+            <p class="section__desc">Escolha por onde começar.</p>
+          </div>
+          <div class="highlights">
+            <a class="highlight-card" href="#/devocionais">
+              <span class="highlight-icon">📖</span>
+              <h3>Devocionais</h3>
+              <p>Palavra diária programada para cada dia da semana.</p>
+              <span class="highlight-cta">Ler agora →</span>
+            </a>
+            <a class="highlight-card" href="#/pregacoes">
+              <span class="highlight-icon">🎬</span>
+              <h3>Pregações</h3>
+              <p>Mensagens dos pastores direto do canal no YouTube.</p>
+              <span class="highlight-cta">Assistir agora →</span>
+            </a>
+            <a class="highlight-card" href="#/testes">
+              <span class="highlight-icon">💞</span>
+              <h3>Testes</h3>
+              <p>Linguagens do amor, temperamento e mais — com resultado na hora.</p>
+              <span class="highlight-cta">Fazer um teste →</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </section>
 
-  <!-- TESTES -->
-  <section class="section" id="testes">
-    <div class="container">
-      <div class="section__head">
-        <p class="section__eyebrow">Conhecer-se para amar melhor</p>
-        <h2 class="section__title">Testes para o casal</h2>
-        <p class="section__desc">Testes interativos para vocês se entenderem e crescerem juntos.</p>
+    <!-- PÁGINA: DEVOCIONAIS -->
+    <section class="page" id="page-devocionais">
+      <div class="container page__pad">
+        <div class="section__head">
+          <p class="section__eyebrow">Palavra para o coração</p>
+          <h2 class="section__title">Devocionais</h2>
+          <p class="section__desc">Mensagens diárias para nutrir a vida do casal.</p>
+        </div>
+        <div class="filter-tabs" id="devFiltros">
+          <button class="filter-tab filter-tab--active" data-filtro="hoje">Hoje</button>
+          <button class="filter-tab" data-filtro="semana">Semana</button>
+          <button class="filter-tab" data-filtro="todos">Todos</button>
+        </div>
+        <div class="cards" id="listaDevocionais"></div>
       </div>
-      <div id="testesArea"></div>
-    </div>
-  </section>
+    </section>
+
+    <!-- PÁGINA: PREGAÇÕES -->
+    <section class="page" id="page-pregacoes">
+      <div class="container page__pad">
+        <div class="section__head">
+          <p class="section__eyebrow">Mensagens da igreja</p>
+          <h2 class="section__title">Pregações</h2>
+          <p class="section__desc">Assista às pregações dos pastores Rodrigo &amp; Suelen direto do YouTube.</p>
+        </div>
+        <div class="cards" id="listaPregacoes"></div>
+      </div>
+    </section>
+
+    <!-- PÁGINA: TESTES -->
+    <section class="page" id="page-testes">
+      <div class="container page__pad">
+        <div class="section__head">
+          <p class="section__eyebrow">Conhecer-se para amar melhor</p>
+          <h2 class="section__title">Testes para o casal</h2>
+          <p class="section__desc">Responda e veja o resultado na hora — simples e visual.</p>
+        </div>
+        <div id="testesArea"></div>
+      </div>
+    </section>
+
+    <!-- PÁGINA: TESTE (corredor) -->
+    <section class="page" id="page-teste">
+      <div class="container page__pad" id="testeArea"></div>
+    </section>
+
+  </main>
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -137,7 +177,7 @@
 
       <form id="formCadastro" class="form" hidden>
         <h3 class="modal__title">Criar sua conta</h3>
-        <p class="modal__sub">É rápido. Seu telefone fica visível apenas para a administração.</p>
+        <p class="modal__sub">É rápido. Seus dados ficam visíveis apenas para a administração.</p>
         <label class="field">
           <span>Nome</span>
           <input type="text" id="cadastroNome" placeholder="Seu nome completo" required />

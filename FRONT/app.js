@@ -62,12 +62,32 @@ function badgePeriodo(periodo) {
 document.getElementById("navToggle").addEventListener("click", () => {
   document.querySelector(".nav__inner").classList.toggle("open");
 });
-document.querySelectorAll("[data-nav]").forEach((a) =>
-  a.addEventListener("click", () => document.querySelector(".nav__inner").classList.remove("open"))
-);
 window.addEventListener("scroll", () => {
   document.getElementById("nav").classList.toggle("scrolled", window.scrollY > 10);
 });
+
+// ===== Rotas (páginas do app) =====
+const PAGINAS = ["home", "devocionais", "pregacoes", "testes", "teste"];
+
+function rotear() {
+  const hash = location.hash.replace(/^#\/?/, "");
+  const [rota, param] = hash.split("/");
+  let pagina = PAGINAS.includes(rota) ? rota : "home";
+  if (pagina === "teste" && !param) pagina = "testes";
+
+  document.querySelectorAll(".page").forEach((p) => p.classList.toggle("page--active", p.id === "page-" + pagina));
+  document.querySelectorAll("#navLinks a").forEach((a) => a.classList.toggle("nav__link--active", a.dataset.rota === pagina));
+  document.querySelector(".nav__inner").classList.remove("open");
+
+  if (pagina === "testes" && window.LabiatoTests) {
+    window.LabiatoTests.renderGrid(document.getElementById("testesArea"));
+  }
+  if (pagina === "teste" && param && window.LabiatoTests) {
+    window.LabiatoTests.start(param, document.getElementById("testeArea"));
+  }
+  window.scrollTo({ top: 0 });
+}
+window.addEventListener("hashchange", rotear);
 
 // ===== Estado de login do usuário =====
 function atualizarNavUsuario() {
@@ -381,4 +401,4 @@ document.addEventListener("click", async (e) => {
 atualizarNavUsuario();
 carregarDevocionais();
 carregarPregacoes();
-window.LabiatoTests.renderGrid(document.getElementById("testesArea"));
+rotear();
