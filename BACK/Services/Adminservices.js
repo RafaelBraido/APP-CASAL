@@ -49,7 +49,7 @@ const AdminService = {
   },
 
   async listarUsuarios() {
-    return User.find({}, "nome telefone role createdAt").sort({ createdAt: -1 });
+    return User.find({}, "nome telefone email role createdAt").sort({ createdAt: -1 });
   },
 
   async promoverParaAdmin(nome) {

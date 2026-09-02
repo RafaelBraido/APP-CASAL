@@ -279,8 +279,9 @@ function responder(btn, container) {
 function finalizar(container) {
   const { teste, respostas } = testeAtivo;
   const r = teste.calcular(respostas);
+  const temGrafico = r.grafico || (r.detalhes && r.detalhes.pontos);
   let graficoHtml = "";
-  if (r.grafico) graficoHtml = `<div class="result__chart"><canvas id="resultCanvas"></canvas></div>`;
+  if (temGrafico) graficoHtml = `<div class="result__chart"><canvas id="resultCanvas"></canvas></div>`;
   container.innerHTML = `
     <div class="quiz">
       <button class="quiz__back" id="quizBack">← Voltar aos testes</button>
@@ -304,6 +305,16 @@ function finalizar(container) {
         datasets: [{ label: "Seu relacionamento", data: r.grafico.valores, fill: true, backgroundColor: "rgba(201,169,110,.25)", borderColor: "#c9a96e", pointBackgroundColor: "#4a1942", borderWidth: 2 }],
       },
       options: { scales: { r: { min: 0, max: 4, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } },
+    });
+  } else if (r.detalhes && r.detalhes.pontos && window.Chart) {
+    const chaves = Object.keys(r.detalhes.pontos);
+    new Chart(document.getElementById("resultCanvas"), {
+      type: "bar",
+      data: {
+        labels: chaves.map((k) => (teste.perfis && teste.perfis[k] ? teste.perfis[k].nome : k)),
+        datasets: [{ label: "Seus pontos", data: chaves.map((k) => r.detalhes.pontos[k]), backgroundColor: ["#4a1942", "#c9a96e", "#6d2b5f", "#8a4f7d"], borderRadius: 8 }],
+      },
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } },
     });
   }
 

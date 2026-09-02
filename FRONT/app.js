@@ -130,6 +130,7 @@ document.getElementById("formCadastro").addEventListener("submit", async (e) => 
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nome: document.getElementById("cadastroNome").value.trim(),
+        email: document.getElementById("cadastroEmail").value.trim(),
         telefone: document.getElementById("cadastroTelefone").value.trim(),
         password: document.getElementById("cadastroSenha").value,
       }),
@@ -355,9 +356,9 @@ async function carregarAdminUsers() {
       options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } },
     });
     document.getElementById("usersTable").innerHTML = `
-      <thead><tr><th>Nome</th><th>Telefone</th><th>Tipo</th><th>Desde</th></tr></thead>
+      <thead><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Tipo</th><th>Desde</th></tr></thead>
       <tbody>${usuarios.map((u) => `
-        <tr><td>${escapar(u.nome)}</td><td>${escapar(u.telefone || "—")}</td>
+        <tr><td>${escapar(u.nome)}</td><td>${escapar(u.email || "—")}</td><td>${escapar(u.telefone || "—")}</td>
         <td><span class="badge ${u.role === "admin" ? "badge--admin" : "badge--user"}">${u.role === "admin" ? "Admin" : "Usuário"}</span></td>
         <td>${formatarData(u.createdAt)}</td></tr>`).join("")}</tbody>`;
   } catch (e) { toast("Erro ao carregar usuários: " + e.message); }

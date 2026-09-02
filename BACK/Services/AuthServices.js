@@ -22,20 +22,21 @@ function formatarUsuario(user) {
   };
 }
 
-function gerarEmailInterno(nome) {
-  const base = nome.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "");
-  const sufixo = `${Date.now()}.${Math.floor(Math.random() * 100000)}`;
-  return `${base || "conta"}.${sufixo}@sememail.facilitatech`;
-}
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const register = async (data) => {
   const nome = String(data.nome || "").trim();
   const password = String(data.password || "");
   const telefone = String(data.telefone || "").trim();
-  const { role } = data;
+  const email = String(data.email || "").trim().toLowerCase();
 
-  if (!nome || !password) {
-    const error = new Error("Nome e senha são obrigatórios");
+  if (!nome || !email || !telefone || !password) {
+    const error = new Error("Nome, email, telefone e senha são obrigatórios");
+    error.statusCode = 400;
+    throw error;
+  }
+  if (!EMAIL_REGEX.test(email)) {
+    const error = new Error("Informe um email válido");
     error.statusCode = 400;
     throw error;
   }
@@ -57,14 +58,21 @@ const register = async (data) => {
     throw error;
   }
 
+  const emailJaExiste = await User.findOne({ email });
+  if (emailJaExiste) {
+    const error = new Error("Esse email já está em uso. Entre na sua conta ou use outro email.");
+    error.statusCode = 400;
+    throw error;
+  }
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
     nome,
     telefone,
-    email: gerarEmailInterno(nome),
+    email,
     password: hashedPassword,
-    role: role || "user",
+    role: "user", // toda conta criada é de usuário comum
     active: true,
   });
 
