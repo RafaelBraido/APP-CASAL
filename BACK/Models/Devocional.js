@@ -19,7 +19,7 @@ const DevocionalSchema = new mongoose.Schema(
     autor: {
       type: String,
       trim: true,
-      default: "Pastores Rodrigo & Suelen Labiato",
+      default: "Pastores Rodrigo & Suelen Labiak",
     },
     periodo: {
       type: String,

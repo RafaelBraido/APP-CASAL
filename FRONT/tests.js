@@ -107,6 +107,84 @@ const TESTES = [
   },
 
   {
+    id: "temperamento",
+    nome: "Temperamento",
+    descricao: "Descubra seu temperamento dominante entre os quatro clássicos.",
+    cor: "#6d2b5f",
+    icon: "🌟",
+    tempo: "2 min",
+    perguntas: [
+      { pergunta: "Em uma festa, você costuma…", opcoes: [
+        { t: "Conversar com todo mundo, animado(a)", k: "sanguineo" },
+        { t: "Liderar e organizar as coisas", k: "colerico" },
+        { t: "Observar e analisar as pessoas", k: "melancolico" },
+        { t: "Ficar à vontade, sem agitação", k: "fleumatico" } ] },
+      { pergunta: "Diante de uma decisão importante, você…", opcoes: [
+        { t: "Decide rápido e segue o coração", k: "sanguineo" },
+        { t: "Decide com firmeza e objetividade", k: "colerico" },
+        { t: "Pesa prós e contras com cuidado", k: "melancolico" },
+        { t: "Prefere esperar e evitar conflito", k: "fleumatico" } ] },
+      { pergunta: "Sob pressão, você tende a…", opcoes: [
+        { t: "Desabafar e buscar apoio", k: "sanguineo" },
+        { t: "Assumir o controle da situação", k: "colerico" },
+        { t: "Se preocupar e planejar detalhes", k: "melancolico" },
+        { t: "Manter a calma e seguir estável", k: "fleumatico" } ] },
+      { pergunta: "Seu maior ponto forte é…", opcoes: [
+        { t: "Alegria contagiante", k: "sanguineo" },
+        { t: "Determinação e liderança", k: "colerico" },
+        { t: "Profundidade e lealdade", k: "melancolico" },
+        { t: "Paciência e equilíbrio", k: "fleumatico" } ] },
+      { pergunta: "Como você reage a mudanças?", opcoes: [
+        { t: "Animo-me com as novidades", k: "sanguineo" },
+        { t: "Ajo rápido para resolver", k: "colerico" },
+        { t: "Analiso os riscos antes", k: "melancolico" },
+        { t: "Adapto-me com tranquilidade", k: "fleumatico" } ] },
+      { pergunta: "No trabalho ou nos estudos, você…", opcoes: [
+        { t: "Rendo bem com diversão e gente", k: "sanguineo" },
+        { t: "Quero resultados e liderança", k: "colerico" },
+        { t: "Quero tudo perfeito e bem feito", k: "melancolico" },
+        { t: "Mantenho um ritmo constante", k: "fleumatico" } ] },
+      { pergunta: "Quando contrariado, você…", opcoes: [
+        { t: "Esquece rápido e volta ao bom humor", k: "sanguineo" },
+        { t: "Enfrenta e resolve logo", k: "colerico" },
+        { t: "Guarda e repensa o que houve", k: "melancolico" },
+        { t: "Evita o confronto e cede", k: "fleumatico" } ] },
+      { pergunta: "Com os amigos, você é…", opcoes: [
+        { t: "A alma da roda", k: "sanguineo" },
+        { t: "Quem organiza tudo", k: "colerico" },
+        { t: "O conselheiro fiel", k: "melancolico" },
+        { t: "Quem ouve com calma", k: "fleumatico" } ] },
+      { pergunta: "Seu ambiente ideal é…", opcoes: [
+        { t: "Cheio de gente e risadas", k: "sanguineo" },
+        { t: "Eficiente, com tudo no lugar", k: "colerico" },
+        { t: "Organizado e bonito nos detalhes", k: "melancolico" },
+        { t: "Confortável e tranquilo", k: "fleumatico" } ] },
+      { pergunta: "Numa discussão, você…", opcoes: [
+        { t: "Desarma com bom humor", k: "sanguineo" },
+        { t: "Quer vencer o argumento", k: "colerico" },
+        { t: "Precisa de justiça e lógica", k: "melancolico" },
+        { t: "Procura apaziguar", k: "fleumatico" } ] },
+      { pergunta: "Sua energia no dia a dia é…", opcoes: [
+        { t: "Em picos, muito entusiasmo", k: "sanguineo" },
+        { t: "Dirigida a metas", k: "colerico" },
+        { t: "Focada em qualidade", k: "melancolico" },
+        { t: "Estável e leve", k: "fleumatico" } ] },
+      { pergunta: "Um elogio que combina com você…", opcoes: [
+        { t: "“Você ilumina o ambiente”", k: "sanguineo" },
+        { t: "“Você realiza o que fala”", k: "colerico" },
+        { t: "“Você tem um coração profundo”", k: "melancolico" },
+        { t: "“Você é paz em pessoa”", k: "fleumatico" } ] },
+    ],
+    perfis: {
+      sanguineo: { nome: "Sanguíneo", icon: "🌞", cor: "#e0a458", desc: "Comunicativo, alegre e sociável. Você aquece os ambientes e encanta pelas relações, com energia contagiante.", dica: "Cuide da dispersão: anime-se, mas também conclua o que começar." },
+      colerico: { nome: "Colérico", icon: "🔥", cor: "#c0392b", desc: "Determinado, prático e líder. Você conduz e realiza com objetividade e coragem.", dica: "Lembre-se de ouvir e incluir o outro nas decisões." },
+      melancolico: { nome: "Melancólico", icon: "🌧️", cor: "#4a1942", desc: "Profundo, leal e detalhista. Você sente e analisa com cuidado, buscando o melhor em tudo.", dica: "Cuide para não guardar mágoas: converse sobre o que sente." },
+      fleumatico: { nome: "Fleumático", icon: "🍃", cor: "#7da58c", desc: "Calmo, paciente e estável. Você é o equilíbrio do ambiente, com uma paz que contagia.", dica: "Evite adiar conversas necessárias: a sua voz importa." },
+    },
+    calcular(respostas) { return calcularPerfil(respostas, this.perfis); },
+  },
+
+  {
     id: "casal",
     nome: "Teste do Casal",
     descricao: "Descubram o perfil que descreve a relação de vocês.",
@@ -247,8 +325,8 @@ function renderDemoPage(container) {
           <p>Os pastores Rodrigo &amp; Suelen Labiak reuniram, em um só lugar, devocionais diários, pregações e testes para casais. Crie sua conta gratuita e faça parte dessa comunidade.</p>
           <div class="hero__actions">
             ${logado
-              ? `<a class="btn btn--gold" href="#/testes">Ir para os testes</a>`
-              : `<button class="btn btn--gold" id="demoConta">Criar conta e começar</button>`}
+              ? `<a class="btn btn--gold" href="#/testes">Comece sua transformação como casal</a>`
+              : `<button class="btn btn--gold" id="demoConta">Comece sua transformação como casal</button>`}
             <a class="btn btn--ghost" href="#/devocionais">Ver devocionais</a>
           </div>
         </div>
@@ -387,9 +465,10 @@ function finalizar(container) {
           <h3>${r.titulo}</h3>
         </div>
         <p>${r.resumo}</p>
-        ${r.dica ? `<p class="result__note">${r.dica}</p>` : ""}
+        ${r.dica ? `<div class="result__tip"><span class="result__tip-icon">💡</span><div><strong>Dica para o casal</strong>${r.dica}</div></div>` : ""}
         ${rankingHtml}
         ${r.nota ? `<p class="result__note">${r.nota}</p>` : ""}
+        ${logado ? `<p class="result__saved" id="resultSaved" hidden>✓ Resultado salvo na sua conta</p>` : ""}
         ${chartHtml}
         ${logado ? "" : `<p class="result__note">Crie sua conta para salvar este resultado e acompanhar seu progresso.</p>`}
         <div class="result__actions">
@@ -437,7 +516,11 @@ function finalizar(container) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ tipoTeste: teste.id, titulo: r.titulo, resumo: r.resumo, detalhes: r.detalhes }),
-    }).then(() => toast("Resultado salvo!")).catch(() => {});
+    }).then(() => {
+      const saved = document.getElementById("resultSaved");
+      if (saved) saved.hidden = false;
+      toast("Resultado salvo!");
+    }).catch(() => {});
   }
 
   document.getElementById("quizRetry").addEventListener("click", () => start(teste.id, container));
@@ -445,4 +528,4 @@ function finalizar(container) {
   if (btnConta) btnConta.addEventListener("click", () => abrirUser("cadastrar"));
 }
 
-window.LabiatoTests = { renderGrid, start, renderDemoPage };
+window.LabiakTests = { renderGrid, start, renderDemoPage };

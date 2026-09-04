@@ -68,7 +68,7 @@ window.addEventListener("scroll", () => {
 });
 
 // ===== Rotas (páginas do app) =====
-const PAGINAS = ["home", "devocionais", "pregacoes", "testes", "teste", "demonstracao", "admin"];
+const PAGINAS = ["home", "devocionais", "pregacoes", "testes", "teste", "demonstracao", "livros", "admin"];
 
 function rotear() {
   const hash = location.hash.replace(/^#\/?/, "");
@@ -80,14 +80,17 @@ function rotear() {
   document.querySelectorAll("#navLinks a").forEach((a) => a.classList.toggle("nav__link--active", a.dataset.rota === pagina));
   document.querySelector(".nav__inner").classList.remove("open");
 
-  if (pagina === "testes" && window.LabiatoTests) {
-    window.LabiatoTests.renderGrid(document.getElementById("testesArea"));
+  if (pagina === "testes" && window.LabiakTests) {
+    window.LabiakTests.renderGrid(document.getElementById("testesArea"));
   }
-  if (pagina === "teste" && param && window.LabiatoTests) {
-    window.LabiatoTests.start(param, document.getElementById("testeArea"));
+  if (pagina === "teste" && param && window.LabiakTests) {
+    window.LabiakTests.start(param, document.getElementById("testeArea"));
   }
-  if (pagina === "demonstracao" && window.LabiatoTests) {
-    window.LabiatoTests.renderDemoPage(document.getElementById("demoArea"));
+  if (pagina === "demonstracao" && window.LabiakTests) {
+    window.LabiakTests.renderDemoPage(document.getElementById("demoArea"));
+  }
+  if (pagina === "livros") {
+    renderLivros();
   }
   if (pagina === "admin") {
     if (getAdminToken()) mostrarPainel(); else mostrarLoginAdmin();
@@ -245,6 +248,80 @@ async function carregarPregacoes() {
   } catch (e) {
     container.innerHTML = `<p class="cards__empty">Erro ao carregar: ${escapar(e.message)}</p>`;
   }
+}
+
+// ===== Livros dos pastores =====
+const LIVROS = [
+  {
+    titulo: "Casamento Inabalável",
+    sub: "Livro + Workbook",
+    ano: "",
+    destaque: true,
+    desc: "Fundamentos bíblicos e psicológicos que curam, alinham e fortalecem a aliança — com um workbook prático para o casal aplicar em cada capítulo.",
+    itens: [
+      "Restaurar a parceria e renovar os votos da caminhada a dois",
+      "Identificar e curar áreas frágeis do relacionamento",
+      "Alinhar propósito, comunicação e expectativas",
+      "Construir uma vida em unidade com Deus no centro",
+    ],
+    link: "https://casamentoinabalavel.com/",
+    linkLabel: "Quero um casamento inabalável",
+  },
+  {
+    titulo: "52 Dias para Transformar Sua Vida",
+    ano: "2022",
+    desc: "Uma jornada de 52 dias para transformar a sua vida com princípios práticos e espirituais.",
+  },
+  {
+    titulo: "7 Passos para uma Vida Extraordinária em Jesus",
+    ano: "2023",
+    desc: "Sete passos simples e profundos para viver uma vida extraordinária guiada por Jesus.",
+  },
+];
+
+function renderLivros() {
+  const container = document.getElementById("livrosArea");
+  const destaque = LIVROS.find((l) => l.destaque);
+  const outros = LIVROS.filter((l) => !l.destaque);
+  const cores = ["#4a1942", "#6d2b5f", "#8a4f7d"];
+  container.innerHTML = `
+    <div class="books-author">
+      <img src="https://media.base44.com/images/public/6a95e99d10e64c944d7a3b70/ec49256db_Foto-Rodrigo-e-Suelen-1.jpg" alt="Pastores Rodrigo e Suelen Labiak" />
+      <div>
+        <p class="demo__kicker">Autores</p>
+        <h3>Rodrigo Labiak da Silva &amp; Suelen Braido da Silva</h3>
+        <p>Casados desde 2004 e pais de Miguel e Rafael, são pastores e psicólogos com mais de 20 anos dedicados ao aconselhamento de casais e famílias. Formados em Teologia e Psicologia, unem fé e ciência em cada página.</p>
+      </div>
+    </div>
+
+    <div class="book-feature">
+      <div class="book-feature__covers">
+        <img src="https://casamentoinabalavel.com/wp-content/uploads/2025/12/Livro-Casamento-Inabalavel-Mockup-3-png-1-1.png" alt="Capa do livro Casamento Inabalável" />
+        <img src="https://casamentoinabalavel.com/wp-content/uploads/2025/12/Workbook-Casamento-Inabalavel-Mockup-3-png-1-1.png" alt="Capa do workbook Casamento Inabalável" />
+      </div>
+      <div>
+        <p class="demo__kicker">Lançamento</p>
+        <h3>${destaque.titulo}</h3>
+        <p>${destaque.desc}</p>
+        <ul>${destaque.itens.map((i) => `<li>${i}</li>`).join("")}</ul>
+        <p class="book-feature__meta">Livro: 14×21 cm, 144 páginas &middot; Workbook: 14×21 cm, 96 páginas</p>
+        <a class="btn btn--gold" href="${destaque.link}" target="_blank" rel="noopener">${destaque.linkLabel}</a>
+      </div>
+    </div>
+
+    <div class="books-grid">
+      ${outros.map((l, i) => `
+        <div class="book-card">
+          <div class="book-card__cover" style="background:linear-gradient(150deg, ${cores[i]}, #2c0f28)">
+            <span class="book-card__cover-title">${l.titulo}</span>
+          </div>
+          <div class="book-card__body">
+            <h4>${l.titulo}</h4>
+            <p>${l.desc}</p>
+            ${l.ano ? `<span class="book-card__year">${l.ano}</span>` : ""}
+          </div>
+        </div>`).join("")}
+    </div>`;
 }
 
 // ===== Admin (página) =====
