@@ -347,3 +347,19 @@ img { max-width: 100%; display: block; }
   cursor: pointer; font-family: inherit; transition: all .2s ease;
 }
 .user-action:hover { background: var(--gold-deep); color: #fff; }
+
+/* ===== Portão dos testes (visitante sem conta) ===== */
+.gate { text-align: center; padding: 54px 30px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.gate__lock { font-size: 2.6rem; display: block; margin-bottom: 12px; }
+.gate h3 { font-family: "Cormorant Garamond", serif; font-size: 1.8rem; color: var(--wine); margin-bottom: 8px; }
+.gate p { color: var(--muted); max-width: 480px; margin: 0 auto 22px; }
+.gate .hero__actions { justify-content: center; }
+
+/* ===== Página admin ===== */
+#page-admin .admin__head { margin-bottom: 18px; }
+#page-admin #adminLogin .form { max-width: 420px; margin: 0 auto; }
+
+/* ===== Rodapé com links ===== */
+.footer__links { display: flex; gap: 20px; align-items: center; }
+.footer__links a { color: var(--muted); font-size: .84rem; text-decoration: none; transition: color .2s ease; }
+.footer__links a:hover { color: var(--gold-deep); }

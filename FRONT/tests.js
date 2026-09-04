@@ -30,29 +30,6 @@ const LINGUAGENS = {
   },
 };
 
-const TEMPERAMENTOS = {
-  sanguineo: {
-    nome: "Sanguíneo", icon: "🌞", cor: "#e0a458",
-    desc: "Comunicativo, alegre e sociável. Você aquece os ambientes e encanta pelas relações, com energia contagiante.",
-    dica: "Cuide da dispersão: anime-se, mas também conclua o que começar.",
-  },
-  colerico: {
-    nome: "Colérico", icon: "🔥", cor: "#c0392b",
-    desc: "Determinado, prático e líder. Você conduz e realiza com objetividade e coragem.",
-    dica: "Lembre-se de ouvir e incluir o outro nas decisões.",
-  },
-  melancolico: {
-    nome: "Melancólico", icon: "🌧️", cor: "#4a1942",
-    desc: "Profundo, leal e detalhista. Você sente e analisa com cuidado, buscando o melhor em tudo.",
-    dica: "Cuide para não guardar mágoas: converse sobre o que sente.",
-  },
-  fleumatico: {
-    nome: "Fleumático", icon: "🍃", cor: "#7da58c",
-    desc: "Calmo, paciente e estável. Você é o equilíbrio do ambiente, com uma paz que contagia.",
-    dica: "Evite adiar conversas necessárias: a sua voz importa.",
-  },
-};
-
 function calcularPerfil(respostas, mapa) {
   const pontos = {};
   respostas.forEach((k) => (pontos[k] = (pontos[k] || 0) + 1));
@@ -127,78 +104,6 @@ const TESTES = [
         { t: "Sinto-me cuidado(a) com um gesto físico de carinho.", k: "toque" } ] },
     ],
     calcular: (respostas) => calcularPerfil(respostas, LINGUAGENS),
-  },
-
-  {
-    id: "temperamento",
-    nome: "Temperamento",
-    descricao: "Descubra seu temperamento dominante entre os quatro clássicos.",
-    cor: "#6d2b5f",
-    icon: "🌟",
-    tempo: "2 min",
-    perguntas: [
-      { pergunta: "Em uma festa, você costuma…", opcoes: [
-        { t: "Conversar com todo mundo, animado(a)", k: "sanguineo" },
-        { t: "Liderar e organizar as coisas", k: "colerico" },
-        { t: "Observar e analisar as pessoas", k: "melancolico" },
-        { t: "Ficar à vontade, sem agitação", k: "fleumatico" } ] },
-      { pergunta: "Diante de uma decisão importante, você…", opcoes: [
-        { t: "Decide rápido e segue o coração", k: "sanguineo" },
-        { t: "Decide com firmeza e objetividade", k: "colerico" },
-        { t: "Pesa prós e contras com cuidado", k: "melancolico" },
-        { t: "Prefere esperar e evitar conflito", k: "fleumatico" } ] },
-      { pergunta: "Sob pressão, você tende a…", opcoes: [
-        { t: "Desabafar e buscar apoio", k: "sanguineo" },
-        { t: "Assumir o controle da situação", k: "colerico" },
-        { t: "Se preocupar e planejar detalhes", k: "melancolico" },
-        { t: "Manter a calma e seguir estável", k: "fleumatico" } ] },
-      { pergunta: "Seu maior ponto forte é…", opcoes: [
-        { t: "Alegria contagiante", k: "sanguineo" },
-        { t: "Determinação e liderança", k: "colerico" },
-        { t: "Profundidade e lealdade", k: "melancolico" },
-        { t: "Paciência e equilíbrio", k: "fleumatico" } ] },
-      { pergunta: "Como você reage a mudanças?", opcoes: [
-        { t: "Animo-me com as novidades", k: "sanguineo" },
-        { t: "Ajo rápido para resolver", k: "colerico" },
-        { t: "Analiso os riscos antes", k: "melancolico" },
-        { t: "Adapto-me com tranquilidade", k: "fleumatico" } ] },
-      { pergunta: "No trabalho ou nos estudos, você…", opcoes: [
-        { t: "Rende bem com diversão e gente", k: "sanguineo" },
-        { t: "Quer resultados e liderança", k: "colerico" },
-        { t: "Quer tudo perfeito e bem feito", k: "melancolico" },
-        { t: "Mantém um ritmo constante", k: "fleumatico" } ] },
-      { pergunta: "Quando contrariado, você…", opcoes: [
-        { t: "Esquece rápido e volta ao bom humor", k: "sanguineo" },
-        { t: "Enfrenta e resolve logo", k: "colerico" },
-        { t: "Guarda e repensa o que houve", k: "melancolico" },
-        { t: "Evita o confronto e cede", k: "fleumatico" } ] },
-      { pergunta: "Com os amigos, você é…", opcoes: [
-        { t: "A alma da roda", k: "sanguineo" },
-        { t: "Quem organiza tudo", k: "colerico" },
-        { t: "O conselheiro fiel", k: "melancolico" },
-        { t: "Quem ouve com calma", k: "fleumatico" } ] },
-      { pergunta: "Seu ambiente ideal é…", opcoes: [
-        { t: "Cheio de gente e risadas", k: "sanguineo" },
-        { t: "Eficiente, com tudo no lugar", k: "colerico" },
-        { t: "Organizado e bonito nos detalhes", k: "melancolico" },
-        { t: "Confortável e tranquilo", k: "fleumatico" } ] },
-      { pergunta: "Numa discussão, você…", opcoes: [
-        { t: "Desarma com bom humor", k: "sanguineo" },
-        { t: "Quer vencer o argumento", k: "colerico" },
-        { t: "Precisa de justiça e lógica", k: "melancolico" },
-        { t: "Procura apaziguar", k: "fleumatico" } ] },
-      { pergunta: "Sua energia no dia a dia é…", opcoes: [
-        { t: "Em picos, muito entusiasmo", k: "sanguineo" },
-        { t: "Dirigida a metas", k: "colerico" },
-        { t: "Focada em qualidade", k: "melancolico" },
-        { t: "Estável e leve", k: "fleumatico" } ] },
-      { pergunta: "Um elogio que combina com você…", opcoes: [
-        { t: "“Você ilumina o ambiente”", k: "sanguineo" },
-        { t: "“Você realiza o que fala”", k: "colerico" },
-        { t: "“Você tem um coração profundo”", k: "melancolico" },
-        { t: "“Você é paz em pessoa”", k: "fleumatico" } ] },
-    ],
-    calcular: (respostas) => calcularPerfil(respostas, TEMPERAMENTOS),
   },
 
   {
@@ -307,15 +212,30 @@ const TESTES = [
 let testeAtivo = null;
 const PASTORES_FOTO = "https://media.base44.com/images/public/6a95e99d10e64c944d7a3b70/ec49256db_Foto-Rodrigo-e-Suelen-1.jpg";
 
-// Demonstração para visitantes sem conta
+// Portão: visitante sem conta na página de testes
 function renderDemo(container) {
   testeAtivo = null;
+  container.innerHTML = `
+    <div class="gate">
+      <span class="gate__lock">🔒</span>
+      <h3>Os testes são exclusivos para membros</h3>
+      <p>Crie sua conta gratuita para responder, ver o resultado na hora e salvá-lo na sua conta — ou conheça primeiro como tudo funciona.</p>
+      <div class="hero__actions">
+        <button class="btn btn--gold" id="demoConta">Criar conta</button>
+        <a class="btn btn--ghost" href="#/demonstracao">Ver demonstração</a>
+      </div>
+    </div>`;
+  document.getElementById("demoConta").addEventListener("click", () => abrirUser("cadastrar"));
+}
+
+// Página de demonstração (resumo do app + pastores)
+function renderDemoPage(container) {
+  const logado = typeof getUserToken === "function" && getUserToken();
   const amostra = [
     { icon: "💬", nome: "Palavras de Afirmação", pct: 40, cor: "#c9a96e" },
     { icon: "🤗", nome: "Toque Físico", pct: 27, cor: "#b86b5a" },
     { icon: "🤝", nome: "Atos de Serviço", pct: 20, cor: "#6d2b5f" },
     { icon: "⏳", nome: "Tempo de Qualidade", pct: 13, cor: "#4a1942" },
-    { icon: "🎁", nome: "Receber Presentes", pct: 7, cor: "#8a4f7d" },
   ];
   container.innerHTML = `
     <div class="demo">
@@ -323,25 +243,35 @@ function renderDemo(container) {
         <img class="demo__photo" src="${PASTORES_FOTO}" alt="Pastores Rodrigo e Suelen Labiak" />
         <div class="demo__hero-text">
           <p class="demo__kicker">Demonstração</p>
-          <h3>Testes para o casal, com resultado na hora</h3>
-          <p>Os pastores Rodrigo &amp; Suelen Labiak prepararam testes interativos para o seu casal. Crie uma conta gratuita para responder e descobrir o seu perfil.</p>
+          <h3>Um app feito com fé para abençoar o seu casal</h3>
+          <p>Os pastores Rodrigo &amp; Suelen Labiak reuniram, em um só lugar, devocionais diários, pregações e testes para casais. Crie sua conta gratuita e faça parte dessa comunidade.</p>
           <div class="hero__actions">
-            <button class="btn btn--gold" id="demoConta">Criar conta e começar</button>
+            ${logado
+              ? `<a class="btn btn--gold" href="#/testes">Ir para os testes</a>`
+              : `<button class="btn btn--gold" id="demoConta">Criar conta e começar</button>`}
             <a class="btn btn--ghost" href="#/devocionais">Ver devocionais</a>
           </div>
         </div>
       </div>
       <div class="demo__grid">
-        ${TESTES.map((t) => `
-          <div class="demo__card">
-            <span class="demo__card-icon" style="background:${t.cor}">${t.icon}</span>
-            <strong>${t.nome}</strong>
-            <span>${t.descricao}</span>
-            <span class="demo__lock">🔒 Exclusivo para membros</span>
-          </div>`).join("")}
+        <div class="demo__card">
+          <span class="demo__card-icon" style="background:#4a1942">📖</span>
+          <strong>Devocionais diários</strong>
+          <span>Palavra programada para cada dia da semana, para nutrir a vida a dois.</span>
+        </div>
+        <div class="demo__card">
+          <span class="demo__card-icon" style="background:#6d2b5f">🎬</span>
+          <strong>Pregações</strong>
+          <span>Mensagens dos pastores direto do canal no YouTube, sempre atualizadas.</span>
+        </div>
+        <div class="demo__card">
+          <span class="demo__card-icon" style="background:#c9a96e">💞</span>
+          <strong>Testes para o casal</strong>
+          <span>Linguagens do amor e mais — resultados na hora, simples e visuais, salvos na sua conta.</span>
+        </div>
       </div>
       <div class="demo__sample">
-        <p class="demo__kicker">Assim fica o seu resultado</p>
+        <p class="demo__kicker">Assim fica o resultado de um teste</p>
         <div class="ranking">
           ${amostra.map((x) => `
           <div class="rank-row">
@@ -350,9 +280,11 @@ function renderDemo(container) {
             <span class="rank-pct">${x.pct}%</span>
           </div>`).join("")}
         </div>
+        <p class="result__note">Resultado de exemplo do teste de Linguagens do Amor, baseado no método de Gary Chapman.</p>
       </div>
     </div>`;
-  document.getElementById("demoConta").addEventListener("click", () => abrirUser("cadastrar"));
+  const btn = document.getElementById("demoConta");
+  if (btn) btn.addEventListener("click", () => abrirUser("cadastrar"));
 }
 
 function renderGrid(container) {
@@ -513,4 +445,4 @@ function finalizar(container) {
   if (btnConta) btnConta.addEventListener("click", () => abrirUser("cadastrar"));
 }
 
-window.LabiatoTests = { renderGrid, start };
+window.LabiatoTests = { renderGrid, start, renderDemoPage };

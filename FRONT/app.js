@@ -68,7 +68,7 @@ window.addEventListener("scroll", () => {
 });
 
 // ===== Rotas (páginas do app) =====
-const PAGINAS = ["home", "devocionais", "pregacoes", "testes", "teste"];
+const PAGINAS = ["home", "devocionais", "pregacoes", "testes", "teste", "demonstracao", "admin"];
 
 function rotear() {
   const hash = location.hash.replace(/^#\/?/, "");
@@ -86,6 +86,12 @@ function rotear() {
   if (pagina === "teste" && param && window.LabiatoTests) {
     window.LabiatoTests.start(param, document.getElementById("testeArea"));
   }
+  if (pagina === "demonstracao" && window.LabiatoTests) {
+    window.LabiatoTests.renderDemoPage(document.getElementById("demoArea"));
+  }
+  if (pagina === "admin") {
+    if (getAdminToken()) mostrarPainel(); else mostrarLoginAdmin();
+  }
   window.scrollTo({ top: 0 });
 }
 window.addEventListener("hashchange", rotear);
@@ -102,8 +108,6 @@ function logoutUsuario(silencioso) {
   localStorage.removeItem(USER_TOKEN_KEY);
   localStorage.removeItem(USER_NAME_KEY);
   atualizarNavUsuario();
-  location.hash = "#/testes" === location.hash ? "#/" : location.hash;
-  rotear();
   if (!silencioso) toast("Você saiu da sua conta.");
 }
 document.getElementById("btnSair").addEventListener("click", () => logoutUsuario(false));
@@ -122,7 +126,7 @@ document.querySelectorAll("[data-close-user]").forEach((el) => el.addEventListen
 document.querySelectorAll("#userTabs .tab").forEach((t) =>
   t.addEventListener("click", () => abrirUser(t.dataset.utab))
 );
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") { fecharUser(); fecharAdmin(); } });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") fecharUser(); });
 
 document.getElementById("formLogin").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -177,7 +181,6 @@ function filtrarDevocionais() {
   const hojeKey = DIAS_SEMANA[new Date().getDay()];
   if (filtroAtual === "todos") return todosDevocionais;
   if (filtroAtual === "semana") return todosDevocionais.filter((d) => (d.periodo || "hoje") === "semana");
-  // hoje: semana inteira + dia da semana de hoje + marcados "hoje" criados hoje
   return todosDevocionais.filter((d) => {
     const p = d.periodo || "hoje";
     return p === "semana" || p === hojeKey || (p === "hoje" && mesmoDia(d.createdAt));
@@ -244,15 +247,9 @@ async function carregarPregacoes() {
   }
 }
 
-// ===== Admin =====
-const adminModal = document.getElementById("adminModal");
+// ===== Admin (página) =====
 let chartTestesInstance = null;
 
-function abrirAdmin() {
-  adminModal.hidden = false;
-  if (getAdminToken()) mostrarPainel(); else mostrarLoginAdmin();
-}
-function fecharAdmin() { adminModal.hidden = true; }
 function mostrarLoginAdmin() {
   document.getElementById("adminLogin").hidden = false;
   document.getElementById("adminPanel").hidden = true;
@@ -264,8 +261,6 @@ function mostrarPainel() {
   carregarAdminPregacoes();
   carregarAdminUsers();
 }
-document.getElementById("btnAdmin").addEventListener("click", abrirAdmin);
-document.querySelectorAll("[data-close]").forEach((el) => el.addEventListener("click", fecharAdmin));
 document.getElementById("btnAdminSair").addEventListener("click", () => {
   localStorage.removeItem(ADMIN_TOKEN_KEY);
   mostrarLoginAdmin();
