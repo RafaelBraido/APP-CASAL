@@ -1,134 +1,352 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Flutuante Liquid Glass</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #0f1115; 
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            margin: 0;
-            color: #ffffff;
-        }
-
-        /* Botão Hambúrguer Fixado no Topo */
-        .menu-toggle {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 28px;         
-            height: 20px;        
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-        }
-
-        .menu-toggle span {
-            width: 100%;
-            height: 3px;
-            background-color: #ffffff; 
-            border-radius: 2px;
-        }
-
-        /* CAIXINHA FLUTUANTE (Menu Lateral/Gaveta) */
-        .menu-drawer {
-            position: fixed;
-            top: 55px; /* Aparece logo abaixo do botão hambúrguer */
-            left: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px; /* Espaço confortável entre os botões */
-            padding: 18px;
-            
-            /* Visual de Caixinha Flutuante */
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-
-            /* Animação de Abrir/Fechar */
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 999;
-        }
-
-        /* Estado Aberto do Menu */
-        .menu-drawer.aberto {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        /* Botão Liquid Glass */
-        .liquid-btn {
-            position: relative;
-            padding: 12px 24px;
-            font-size: 15px;
-            font-weight: bold;
-            color: #ffffff;
-            text-decoration: none;
-            display: inline-block;
-            border: none;
-            cursor: pointer;
-            border-radius: 46px;
-            text-align: left;
-            white-space: nowrap;
-            
-            /* Estilo Liquid Glass */
-            background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.2) 100%);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.2s ease;
-        }
-
-        /* Hover nos Botões */
-        .liquid-btn:hover {
-            background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.25) 45%, rgba(255,255,255,0.4) 100%);
-            transform: translateY(-2px);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rodrigo & Suelen Labiak — Pastores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icon.svg" />
+  <meta name="theme-color" content="#4a1942" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="R&S Labiak" />
 </head>
 <body>
 
-    <!-- Botão Hambúrguer -->
-    <button class="menu-toggle" onclick="toggleMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
-    <!-- Caixinha Flutuante com os Botões -->
-    <div class="menu-drawer" id="menuItem">
-        <a href="#" class="liquid-btn">Início</a>
-        <a href="#" class="liquid-btn">Orange Glass</a>
-        <a href="#" class="liquid-btn">Teste de Personalidade</a>
-        <a href="#" class="liquid-btn">Projetos</a>
-        <a href="#" class="liquid-btn">Contato</a>
+  <!-- NAV -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#/" class="nav__brand">
+        <span class="nav__brand-mark">R<span class="amp">&amp;</span>S</span>
+        <span class="nav__brand-text">Labiak</span>
+      </a>
+      <nav class="nav__links" id="navLinks">
+        <a href="#/" data-rota="home">Início</a>
+        <a href="#/devocionais" data-rota="devocionais">Devocionais</a>
+        <a href="#/pregacoes" data-rota="pregacoes">Pregações</a>
+        <a href="#/testes" data-rota="testes">Testes</a>
+        <a href="#/livros" data-rota="livros">Livros</a>
+      </nav>
+      <div class="nav__right">
+        <div class="nav__user" id="navUser" hidden>
+          <span id="navUserName"></span>
+          <button class="btn btn--ghost btn--sm" id="btnSair">Sair</button>
+        </div>
+        <button class="btn btn--gold btn--sm" id="btnEntrar">Criar conta</button>
+      </div>
+      <button class="nav__toggle" id="navToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+  </header>
 
-    <script>
-        function toggleMenu() {
-            var menu = document.getElementById("menuItem");
-            menu.classList.toggle("aberto");
-        }
-    </script>
+  <main id="app">
 
+    <!-- PÁGINA: INÍCIO -->
+    <section class="page page--active" id="page-home">
+      <section class="hero">
+        <div class="hero__overlay"></div>
+        <div class="hero__glow"></div>
+        <div class="hero__content hero__content--split">
+          <div class="hero__text">
+            <p class="hero__kicker">Pastores &middot; Rodrigo &amp; Suelen Labiak</p>
+            <h1 class="hero__title">Um coração <em>só</em> para servir</h1>
+            <p class="hero__sub">Devocionais diários, pregações e testes para fortalecer a vida a dois — guiados pela fé que nos une.</p>
+            <div class="hero__actions">
+              <a href="#/devocionais" class="btn btn--gold">Devocional de hoje</a>
+              <a href="#/testes" class="btn btn--outline">Fazer um teste</a>
+            </div>
+          </div>
+          <div class="hero__photo">
+            <img src="https://media.base44.com/images/public/6a95e99d10e64c944d7a3b70/ec49256db_Foto-Rodrigo-e-Suelen-1.jpg" alt="Pastores Rodrigo e Suelen Labiak" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section__head">
+            <p class="section__eyebrow">Bem-vindo ao app</p>
+            <h2 class="section__title">Tudo para o seu casal</h2>
+            <p class="section__desc">Escolha por onde começar.</p>
+          </div>
+          <div class="highlights">
+            <a class="highlight-card" href="#/devocionais">
+              <span class="highlight-icon">📖</span>
+              <h3>Devocionais</h3>
+              <p>Palavra diária programada para cada dia da semana.</p>
+              <span class="highlight-cta">Ler agora →</span>
+            </a>
+            <a class="highlight-card" href="#/pregacoes">
+              <span class="highlight-icon">🎬</span>
+              <h3>Pregações</h3>
+              <p>Mensagens dos pastores direto do canal no YouTube.</p>
+              <span class="highlight-cta">Assistir agora →</span>
+            </a>
+            <a class="highlight-card" href="#/testes">
+              <span class="highlight-icon">💞</span>
+              <h3>Testes</h3>
+              <p>Linguagens do amor e mais — com resultado na hora.</p>
+              <span class="highlight-cta">Fazer um teste →</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- PÁGINA: DEVOCIONAIS -->
+    <section class="page" id="page-devocionais">
+      <div class="container page__pad">
+        <div class="section__head">
+          <p class="section__eyebrow">Palavra para o coração</p>
+          <h2 class="section__title">Devocionais</h2>
+          <p class="section__desc">Mensagens diárias para nutrir a vida do casal.</p>
+        </div>
+        <div class="filter-tabs" id="devFiltros">
+          <button class="filter-tab filter-tab--active" data-filtro="hoje">Hoje</button>
+          <button class="filter-tab" data-filtro="semana">Semana</button>
+          <button class="filter-tab" data-filtro="todos">Todos</button>
+        </div>
+        <div class="cards" id="listaDevocionais"></div>
+      </div>
+    </section>
+
+    <!-- PÁGINA: PREGAÇÕES -->
+    <section class="page" id="page-pregacoes">
+      <div class="container page__pad">
+        <div class="section__head">
+          <p class="section__eyebrow">Mensagens da igreja</p>
+          <h2 class="section__title">Pregações</h2>
+          <p class="section__desc">Assista às pregações dos pastores Rodrigo &amp; Suelen direto do YouTube.</p>
+        </div>
+        <div class="cards" id="listaPregacoes"></div>
+      </div>
+    </section>
+
+    <!-- PÁGINA: TESTES -->
+    <section class="page" id="page-testes">
+      <div class="container page__pad">
+        <div class="section__head">
+          <p class="section__eyebrow">Conhecer-se para amar melhor</p>
+          <h2 class="section__title">Testes para o casal</h2>
+          <p class="section__desc">Responda e veja o resultado na hora — simples e visual.</p>
+        </div>
+        <div id="testesArea"></div>
+      </div>
+    </section>
+
+    <!-- PÁGINA: TESTE (corredor) -->
+    <section class="page" id="page-teste">
+      <div class="container page__pad" id="testeArea"></div>
+    </section>
+
+    <!-- PÁGINA: LIVROS -->
+    <section class="page" id="page-livros">
+      <div class="container page__pad">
+        <div class="section__head">
+          <p class="section__eyebrow">Palavra escrita com propósito</p>
+          <h2 class="section__title">Livros dos Pastores</h2>
+          <p class="section__desc">Obras do pastor Rodrigo Labiak da Silva e da pastora Suelen Braido da Silva para edificar casais e famílias.</p>
+        </div>
+        <div id="livrosArea"></div>
+      </div>
+    </section>
+
+    <!-- PÁGINA: DEMONSTRAÇÃO -->
+    <section class="page" id="page-demonstracao">
+      <div class="container page__pad" id="demoArea"></div>
+    </section>
+
+    <!-- PÁGINA: ADMIN -->
+    <section class="page" id="page-admin">
+      <div class="container page__pad" style="max-width: 860px">
+        <div class="section__head">
+          <p class="section__eyebrow">Área do Pastor</p>
+          <h2 class="section__title">Painel de Administração</h2>
+          <p class="section__desc">Gerencie usuários, programe os devocionais da semana e acompanhe os resultados dos testes.</p>
+        </div>
+
+        <div id="adminLogin">
+          <form id="formAdminLogin" class="form">
+            <label class="field">
+              <span>Código de acesso</span>
+              <input type="password" id="adminCodigo" placeholder="••••" autocomplete="off" required />
+            </label>
+            <p class="form__error" id="erroAdmin"></p>
+            <button type="submit" class="btn btn--gold btn--block">Entrar</button>
+          </form>
+        </div>
+
+        <div id="adminPanel" hidden>
+          <div class="admin__head">
+            <span></span>
+            <button class="btn btn--ghost btn--sm" id="btnAdminSair">Encerrar sessão</button>
+          </div>
+
+          <div class="tabs" id="adminTabs">
+            <button class="tab tab--active" data-tab="dev">Devocionais</button>
+            <button class="tab" data-tab="preg">Pregações</button>
+            <button class="tab" data-tab="users">Usuários</button>
+            <button class="tab" data-tab="resultados">Resultados</button>
+          </div>
+
+          <!-- Aba devocionais -->
+          <div class="tabpane tabpane--active" id="paneDev">
+            <form id="formDevocional" class="form">
+              <label class="field">
+                <span>Título</span>
+                <input type="text" id="devTitulo" placeholder="Ex.: O amor que protege" required />
+              </label>
+              <label class="field">
+                <span>Versículo (opcional)</span>
+                <input type="text" id="devVersiculo" placeholder="Ex.: 1 Coríntios 13:7" />
+              </label>
+              <label class="field">
+                <span>Conteúdo</span>
+                <textarea id="devConteudo" rows="5" placeholder="Escreva o devocional…" required></textarea>
+              </label>
+              <label class="field">
+                <span>Quando exibir</span>
+                <select id="devPeriodo">
+                  <option value="hoje">Hoje</option>
+                  <option value="semana">Semana inteira</option>
+                  <option value="dom">Domingo</option>
+                  <option value="seg">Segunda-feira</option>
+                  <option value="ter">Terça-feira</option>
+                  <option value="qua">Quarta-feira</option>
+                  <option value="qui">Quinta-feira</option>
+                  <option value="sex">Sexta-feira</option>
+                  <option value="sab">Sábado</option>
+                </select>
+              </label>
+              <p class="form__error" id="erroDev"></p>
+              <button type="submit" class="btn btn--gold btn--block">Publicar devocional</button>
+            </form>
+            <h4 class="admin__list-title">Publicados</h4>
+            <div id="adminListaDev" class="admin__list"></div>
+          </div>
+
+          <!-- Aba pregações -->
+          <div class="tabpane" id="panePreg">
+            <form id="formPregacao" class="form">
+              <label class="field">
+                <span>Título</span>
+                <input type="text" id="pregTitulo" placeholder="Ex.: O poder do perdão no casamento" required />
+              </label>
+              <label class="field">
+                <span>URL do YouTube</span>
+                <input type="url" id="pregUrl" placeholder="https://youtube.com/watch?v=…" required />
+              </label>
+              <label class="field">
+                <span>Descrição (opcional)</span>
+                <textarea id="pregDescricao" rows="3" placeholder="Breve descrição da pregação…"></textarea>
+              </label>
+              <p class="form__error" id="erroPreg"></p>
+              <button type="submit" class="btn btn--gold btn--block">Adicionar pregação</button>
+            </form>
+            <h4 class="admin__list-title">Publicadas</h4>
+            <div id="adminListaPreg" class="admin__list"></div>
+          </div>
+
+          <!-- Aba usuários -->
+          <div class="tabpane" id="paneUsers">
+            <div class="stat-row" id="statRow"></div>
+            <h4 class="admin__list-title">Testes realizados por tipo</h4>
+            <div class="chart-box"><canvas id="chartTestes" height="180"></canvas></div>
+            <h4 class="admin__list-title">Usuários cadastrados</h4>
+            <div class="users-table-wrap">
+              <table class="users-table" id="usersTable"></table>
+            </div>
+          </div>
+
+          <!-- Aba resultados -->
+          <div class="tabpane" id="paneResultados">
+            <h4 class="admin__list-title">Resultados dos testes</h4>
+            <div class="users-table-wrap">
+              <table class="users-table" id="resultsTable"></table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="nav__brand-mark">R<span class="amp">&amp;</span>S</span>
+        <div>
+          <strong>Rodrigo &amp; Suelen Labiak</strong>
+          <p>Pastores &middot; servindo com amor</p>
+        </div>
+      </div>
+      <div class="footer__links">
+        <a href="#/demonstracao">Demonstração</a>
+        <a href="#/admin">Área do Pastor</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- USER MODAL -->
+  <div class="modal" id="userModal" hidden>
+    <div class="modal__backdrop" data-close-user></div>
+    <div class="modal__panel">
+      <button class="modal__close" data-close-user aria-label="Fechar">&times;</button>
+      <div class="tabs" id="userTabs">
+        <button class="tab tab--active" data-utab="entrar">Entrar</button>
+        <button class="tab" data-utab="cadastrar">Criar conta</button>
+      </div>
+
+      <form id="formLogin" class="form">
+        <h3 class="modal__title">Bem-vindo de volta</h3>
+        <p class="modal__sub">Entre para fazer os testes e salvar seus resultados.</p>
+        <label class="field">
+          <span>Nome</span>
+          <input type="text" id="loginNome" placeholder="Seu nome" required />
+        </label>
+        <label class="field">
+          <span>Senha</span>
+          <input type="password" id="loginSenha" placeholder="Sua senha" required />
+        </label>
+        <p class="form__error" id="erroLogin"></p>
+        <button type="submit" class="btn btn--gold btn--block">Entrar</button>
+      </form>
+
+      <form id="formCadastro" class="form" hidden>
+        <h3 class="modal__title">Criar sua conta</h3>
+        <p class="modal__sub">É rápido. Seus dados ficam visíveis apenas para a administração.</p>
+        <label class="field">
+          <span>Nome</span>
+          <input type="text" id="cadastroNome" placeholder="Seu nome completo" required />
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="cadastroEmail" placeholder="voce@email.com" required />
+        </label>
+        <label class="field">
+          <span>Telefone</span>
+          <input type="tel" id="cadastroTelefone" placeholder="(11) 98765-4321" required />
+        </label>
+        <label class="field">
+          <span>Senha</span>
+          <input type="password" id="cadastroSenha" placeholder="Mínimo 6 caracteres" required />
+        </label>
+        <p class="form__error" id="erroCadastro"></p>
+        <button type="submit" class="btn btn--gold btn--block">Criar conta</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/tests.js"></script>
+  <script src="/app.js"></script>
 </body>
 </html>

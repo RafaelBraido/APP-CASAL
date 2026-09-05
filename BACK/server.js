@@ -8,7 +8,9 @@ import { fileURLToPath } from "url";
 
 import UserRoutes from "./Routes/UserRoutes.js";
 import AuthRoutes from "./Routes/AuthRoutes.js";
-import TutorialRoutes from "./Routes/DevocionalRoutes.js";
+import DevocionalRoutes from "./Routes/DevocionalRoutes.js";
+import PregacaoRoutes from "./Routes/PregacaoRoutes.js";
+import ResultadoRoutes from "./Routes/ResultadoRoutes.js";
 import AdminRoutes from "./Routes/AdminRoutes.js";
 
 dotenv.config();
@@ -27,18 +29,21 @@ app.use(cors());
 app.use(compression());
 app.use(express.json({ limit: "100kb" }));
 
-// Servir arquivos estáticos da pasta Front (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, "../FRONT")));
+// Servir arquivos estáticos da pasta FRONT (HTML, CSS, JS)
+const FRONT_DIR = path.join(__dirname, "../FRONT");
+app.use(express.static(FRONT_DIR));
 
 // Rotas da API
 app.use("/User", UserRoutes);
 app.use("/auth", AuthRoutes);
-app.use("/Tutorial", TutorialRoutes);
+app.use("/devocional", DevocionalRoutes);
+app.use("/pregacao", PregacaoRoutes);
+app.use("/resultado", ResultadoRoutes);
 app.use("/Admin", AdminRoutes);
 
-// Qualquer outra rota carrega o index.html do Front
-app.get("/{*splat}", (req, res) => {
-  res.sendFile(path.join(__dirname, "../FRONT/index.html"));
+// Qualquer outra rota carrega o index.html da pasta FRONT
+app.get("*all", (req, res) => {
+  res.sendFile(path.join(FRONT_DIR, "index.html"));
 });
 
 // Middleware global de tratamento de erros

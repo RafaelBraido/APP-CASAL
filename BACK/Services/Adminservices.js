@@ -2,7 +2,8 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../Models/User.js";
-import Devocional from "../Models/Devocional.js";
+import Tutorial from "../Models/Devocional.js";
+import Resultado from "../Models/Resultado.js";
 
 const NOME_ADMIN_CODIGO = "Administrador";
 
@@ -48,7 +49,14 @@ const AdminService = {
   },
 
   async listarUsuarios() {
-    return User.find({}, "nome role createdAt").sort({ createdAt: -1 });
+    return User.find({}, "nome telefone email role createdAt").sort({ createdAt: -1 });
+  },
+
+  async listarResultados() {
+    return Resultado.find()
+      .populate("usuario", "nome email")
+      .sort({ createdAt: -1 })
+      .limit(100);
   },
 
   async promoverParaAdmin(nome) {
@@ -72,12 +80,18 @@ const AdminService = {
   },
 
   async estatisticas() {
-    const [totalUsuarios, totalAdmins, totalTutoriais] = await Promise.all([
+    const [totalUsuarios, totalAdmins, totalTutoriais, totalResultados, resultadosPorTipo] = await Promise.all([
       User.countDocuments({}),
       User.countDocuments({ role: "admin" }),
-      Devocional.countDocuments({}),
+      Tutorial.countDocuments({}),
+      Resultado.countDocuments({}),
+      Resultado.aggregate([{ $group: { _id: "$tipoTeste", total: { $sum: 1 } } }]),
     ]);
-    return { totalUsuarios, totalAdmins, totalTutoriais };
+
+    const testesPorTipo = { casal: 0, linguagens: 0, temperamento: 0, grafico: 0 };
+    resultadosPorTipo.forEach((r) => (testesPorTipo[r._id] = r.total));
+
+    return { totalUsuarios, totalAdmins, totalTutoriais, totalResultados, testesPorTipo };
   },
 };
 

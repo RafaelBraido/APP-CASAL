@@ -11,5 +11,6 @@ router.get("/usuarios", authMiddleware, adminMiddleware, AdminController.listarU
 router.put("/promover", authMiddleware, adminMiddleware, AdminController.promoverParaAdmin);
 router.put("/rebaixar", authMiddleware, adminMiddleware, AdminController.rebaixarAdmin);
 router.get("/estatisticas", authMiddleware, adminMiddleware, AdminController.estatisticas);
+router.get("/resultados", authMiddleware, adminMiddleware, AdminController.listarResultados);
 
 export default router;
