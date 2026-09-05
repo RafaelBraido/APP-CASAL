@@ -2,7 +2,7 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../Models/User.js";
-import Tutorial from "../Models/Tutorial.js";
+import Devocional from "../Models/Devocional.js";
 
 const NOME_ADMIN_CODIGO = "Administrador";
 
@@ -75,7 +75,7 @@ const AdminService = {
     const [totalUsuarios, totalAdmins, totalTutoriais] = await Promise.all([
       User.countDocuments({}),
       User.countDocuments({ role: "admin" }),
-      Tutorial.countDocuments({}),
+      Devocional.countDocuments({}),
     ]);
     return { totalUsuarios, totalAdmins, totalTutoriais };
   },

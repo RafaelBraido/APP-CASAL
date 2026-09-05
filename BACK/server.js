@@ -28,7 +28,7 @@ app.use(compression());
 app.use(express.json({ limit: "100kb" }));
 
 // Servir arquivos estáticos da pasta Front (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, "../Front")));
+app.use(express.static(path.join(__dirname, "../FRONT")));
 
 // Rotas da API
 app.use("/User", UserRoutes);
@@ -37,8 +37,8 @@ app.use("/Tutorial", TutorialRoutes);
 app.use("/Admin", AdminRoutes);
 
 // Qualquer outra rota carrega o index.html do Front
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../Front/index.html"));
+app.get("/{*splat}", (req, res) => {
+  res.sendFile(path.join(__dirname, "../FRONT/index.html"));
 });
 
 // Middleware global de tratamento de erros

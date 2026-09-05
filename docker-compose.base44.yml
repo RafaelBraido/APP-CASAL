@@ -1,0 +1,41 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: facilitatech
+      MONGO_INITDB_ROOT_PASSWORD: facilitatechpass
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    image: node:22
+    working_dir: /app/BACK
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      PORT: "3000"
+      MONGO_URI: mongodb://facilitatech:facilitatechpass@mongo:27017/facilitatech?authSource=admin
+      JWT_SECRET: base44-dev-jwt-secret-change-me
+      JWT_EXPIRES_IN: 1d
+      ADMIN_CODE: "1234"
+    env_file:
+      - ./.env.base44-defaults
+      - /run/base44/app.env
+    volumes:
+      - ./:/app
+      - back_node_modules:/app/BACK/node_modules
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && node --watch server.js"
+
+volumes:
+  mongo_data:
+  back_node_modules:

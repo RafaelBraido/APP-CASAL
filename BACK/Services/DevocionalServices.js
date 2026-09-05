@@ -1,4 +1,4 @@
-import Tutorial from "../Models/Devocional.js";
+import Devocional from "../Models/Devocional.js";
 
 const createDevocional = async (data) => {
   const { Title, Description } = data;
