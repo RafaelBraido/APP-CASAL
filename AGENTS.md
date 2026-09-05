@@ -2,32 +2,35 @@
 
 ## Stack
 - **Backend**: Node.js (ESM) + Express 5 + MongoDB (Mongoose). Lives in `BACK/`.
-- **Frontend**: Static HTML/CSS/JS served by Express from `FRONT/index.html` (single origin on port 3000).
-- **DB**: MongoDB runs as a local compose service (`mongo:7`), no external DB.
+- **Frontend**: Full static SPA (HTML/CSS/JS, PWA) served by Express from `FRONT/index.html` — single origin on port 3000, client-side route navigation.
+- **DB**: MongoDB 7 (compose service `mongo`, auth enabled).
 
 ## Run
 ```
 docker compose -f docker-compose.base44.yml up -d
 ```
-App on http://localhost:3000. The `app` service runs `node --watch server.js` for live reload of backend changes; static frontend files are read from disk each request, so `FRONT/` edits appear without restart.
+App on port 3000. The `app` service runs `node --watch server.js` for live reload of backend changes; `FRONT/` static files are read from disk per request. MongoDB is authenticated (`facilitatech`/`facilitatechpass` in compose) and the healthcheck logs in with those creds to avoid auth-noise in logs.
 
 ## Env vars (all internal — no external secrets needed)
 - `MONGO_URI` — local mongo connection (set in compose)
-- `JWT_SECRET` — JWT signing secret (dev value in compose)
+- `JWT_SECRET` — JWT signing secret (dev default in `.env.base44-defaults`)
 - `JWT_EXPIRES_IN` — defaults to `1d`
 - `ADMIN_CODE` — admin login code, defaults to `1234`
-- `PORT` — defaults to 3000
+- `PORT` — 3000
 
-## Fixes applied to boot here (repo was authored on a case-insensitive OS + older Express)
-1. **Case sensitivity**: the frontend dir is `FRONT/` (uppercase). `BACK/server.js` referenced `../Front`; changed both the `express.static` and catch-all `sendFile` paths to `../FRONT`.
-2. **Express 5 catch-all**: bare `app.get("*", ...)` is invalid in Express 5; changed to `app.get("*all", ...)`.
-3. **Bad model import**: `BACK/Services/Adminservices.js` imported `../Models/Tutorial.js` (file does not exist); the model is `Models/Devocional.js`, so the import path was corrected.
+## API routes (current)
+- `/auth/register`, `/auth/login` — public, rate-limited (10 req/15min per IP)
+- `/devocional` — public GET list; admin POST/PUT/DELETE
+- `/pregacao` — public GET list; admin POST/DELETE
+- `/resultado` — POST (auth), GET `/me` (auth), GET `/estatisticas` (admin)
+- `/User/me` — PUT/DELETE (auth); `/User/all` (admin)
+- `/Admin/codigo` — admin login by code; other `/Admin/*` admin-gated
 
-## Notes / known state
-- `FRONT/index.html` is a standalone "Liquid Glass" menu demo — it does not call the API.
-- `BACK/app.js` contains older frontend JS (login/devocional UI) that is **orphaned**: it is not served by Express and references API routes (`/devocional-diario/hoje`, `/pregacao`, etc.) that do not exist in the current backend. Treat it as stale.
-- Current working API routes: `/auth/register`, `/auth/login`, `/User/*`, `/Tutorial/*` (devocional CRUD, admin-gated), `/Admin/*`.
+## Notes
+- Error handler logs only 5xx errors; expected 4xx validation errors are returned to the client without stack-trace noise.
+- `BACK/node_modules` is committed in the repo (inherited from history); the compose setup shadows it with the `back_node_modules` volume and runs `npm install` on boot.
 
 ## Verify
-- `curl -sf http://localhost:3000/` → returns the HTML page (200).
+- `curl -sf http://localhost:3000/` → the app HTML page (200).
+- `curl -sf http://localhost:3000/pregacao` → JSON array.
 - `curl -sf -X POST http://localhost:3000/auth/register -H "Content-Type: application/json" -d '{"nome":"x","password":"123456"}'` → returns a JWT.
