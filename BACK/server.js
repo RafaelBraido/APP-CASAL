@@ -43,8 +43,9 @@ app.get("/{*splat}", (req, res) => {
 
 // Middleware global de tratamento de erros
 app.use((err, req, res, next) => {
-  console.error(err);
   const statusCode = err.statusCode || 500;
+  // Registra apenas erros inesperados (5xx); erros de cliente (4xx) já são retornados ao usuário
+  if (statusCode >= 500) console.error(err);
   res.status(statusCode).json({
     message: err.message || "Erro interno do servidor",
   });
