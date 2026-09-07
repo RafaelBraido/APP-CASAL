@@ -1,0 +1,16 @@
+{
+  "name": "Rodrigo & Suelen Labiak",
+  "short_name": "R&S Labiak",
+  "description": "Devocionais, pregações e testes para casais — pastores Rodrigo & Suelen Labiak.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#2c0e26",
+  "theme_color": "#4a1942",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

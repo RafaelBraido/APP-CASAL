@@ -5,7 +5,12 @@ const UsersSchema = new mongoose.Schema(
     nome: {
       type: String,
       required: true,
-      trim: true, // Removido o unique: true para evitar bugs no MongoDB
+      trim: true,
+    },
+    telefone: {
+      type: String,
+      trim: true,
+      default: "",
     },
     email: {
       type: String,
