@@ -271,11 +271,15 @@ const LIVROS = [
     titulo: "52 Dias para Transformar Sua Vida",
     ano: "2022",
     desc: "Uma jornada de 52 dias para transformar a sua vida com princípios práticos e espirituais.",
+    link: "https://chk.eduzz.com/R9JJB3V69X",
+    linkLabel: "Adquirir livro",
   },
   {
     titulo: "7 Passos para uma Vida Extraordinária em Jesus",
     ano: "2023",
     desc: "Sete passos simples e profundos para viver uma vida extraordinária guiada por Jesus.",
+    link: "https://chk.eduzz.com/R9JJB3V69X",
+    linkLabel: "Adquirir livro",
   },
 ];
 
@@ -319,6 +323,7 @@ function renderLivros() {
             <h4>${l.titulo}</h4>
             <p>${l.desc}</p>
             ${l.ano ? `<span class="book-card__year">${l.ano}</span>` : ""}
+            ${l.link ? `<a class="btn btn--gold" href="${l.link}" target="_blank" rel="noopener">${l.linkLabel || "Adquirir livro"}</a>` : ""}
           </div>
         </div>`).join("")}
     </div>`;
