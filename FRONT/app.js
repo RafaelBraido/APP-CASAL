@@ -264,13 +264,14 @@ const LIVROS = [
       "Alinhar propósito, comunicação e expectativas",
       "Construir uma vida em unidade com Deus no centro",
     ],
-    link: "https://casamentoinabalavel.com/",
+    link: "https://chk.eduzz.com/R9JJB3V69X",
     linkLabel: "Quero um casamento inabalável",
   },
   {
     titulo: "52 Dias para Transformar Sua Vida",
     ano: "2022",
     desc: "Uma jornada de 52 dias para transformar a sua vida com princípios práticos e espirituais.",
+    capa: "https://cdn.eduzzcdn.com/myeduzz/upload/b5/7c/b57c6d5e24f34956b053a055399f5119",
     link: "https://chk.eduzz.com/R9JJB3V69X",
     linkLabel: "Adquirir livro",
   },
@@ -278,6 +279,7 @@ const LIVROS = [
     titulo: "7 Passos para uma Vida Extraordinária em Jesus",
     ano: "2023",
     desc: "Sete passos simples e profundos para viver uma vida extraordinária guiada por Jesus.",
+    capa: "https://cdn.eduzzcdn.com/myeduzz/upload/1f/d6/1fd614f1bfe54681b676864fee9f578c",
     link: "https://chk.eduzz.com/R9JJB3V69X",
     linkLabel: "Adquirir livro",
   },
@@ -316,8 +318,8 @@ function renderLivros() {
     <div class="books-grid">
       ${outros.map((l, i) => `
         <div class="book-card">
-          <div class="book-card__cover" style="background:linear-gradient(150deg, ${cores[i]}, #2c0f28)">
-            <span class="book-card__cover-title">${l.titulo}</span>
+          <div class="book-card__cover"${l.capa ? "" : ` style="background:linear-gradient(150deg, ${cores[i]}, #2c0f28)"`}>
+            ${l.capa ? `<img src="${l.capa}" alt="Capa do livro ${escapar(l.titulo)}" />` : `<span class="book-card__cover-title">${l.titulo}</span>`}
           </div>
           <div class="book-card__body">
             <h4>${l.titulo}</h4>

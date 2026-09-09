@@ -403,6 +403,7 @@ img { max-width: 100%; display: block; }
 .book-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
 .book-card__cover { height: 190px; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; }
 .book-card__cover-title { font-family: "Cormorant Garamond", serif; color: #fff; font-size: 1.2rem; font-weight: 600; line-height: 1.25; }
+.book-card__cover img { max-width: 100%; max-height: 100%; border-radius: 6px; box-shadow: var(--shadow); }
 .book-card__body { padding: 20px; }
 .book-card__body h4 { font-family: "Cormorant Garamond", serif; font-size: 1.3rem; color: var(--wine); }
 .book-card__body p { color: var(--muted); font-size: .86rem; margin-top: 6px; }
